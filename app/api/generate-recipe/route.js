@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateRecipe } from "@/lib/gemini";
+import { embedText } from "@/lib/embeddings";
+import { buildRecipeEmbeddingText } from "@/lib/recipeMatch";
 
 export async function POST(request) {
   let body;
@@ -16,7 +18,19 @@ export async function POST(request) {
 
   try {
     const recipe = await generateRecipe(dish);
-    return NextResponse.json({ recipe });
+
+    // Embedding this recipe lets it surface later via /api/match-recipes for
+    // someone else's similar scan, so the AI-generated fallback actually
+    // grows the retrievable catalog instead of being a dead end each time.
+    // Best-effort: a failure here shouldn't block handing back the recipe.
+    let embedding = null;
+    try {
+      embedding = await embedText(buildRecipeEmbeddingText(recipe));
+    } catch (embedError) {
+      console.error("Embedding a generated recipe failed:", embedError);
+    }
+
+    return NextResponse.json({ recipe, embedding });
   } catch (error) {
     console.error("Recipe generation failed:", error);
     const message = error instanceof Error ? error.message : "Recipe generation failed.";
