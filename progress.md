@@ -71,6 +71,12 @@ Investigated licensed recipe APIs to grow the catalog beyond the 3 hand-authored
 
 Decision: skip recipe API integration for now. The catalog stays at the 3 hand-authored recipes seeded in `scripts/seed-recipes.mjs` until this is revisited.
 
+## 9. Removed recipe matching from the scan flow
+
+Also reviewed the reference design artifact ("Abracadish Flow", linked in CLAUDE.md) for the first time — it uses a different visual language than what's built (warm terracotta dark palette, Instrument Serif display font, three-tier confidence coloring, Bulgarian-first placeholder content) and a Bulgarian-first regional focus. Decision: keep the current visual design as-is for now; not redesigning to match it.
+
+With recipe sourcing deferred (see above), showing "Recipe match" results built on only 3 hardcoded recipes was misleading for anything else photographed. Scoped the removal to just the `/results` page: it now stops after dish recognition (name, confidence, ingredients, clarifying questions) and no longer calls `/api/match-recipes` or renders `RecipeCard`/`ConfidenceBar`. Left everything else intact for later: the `/api/match-recipes` route, `/recipe/[id]`, `/cook/[id]`, `/saved`, and the full Supabase/pgvector/embeddings backend — none of it was deleted, it's just not reachable from the scan flow right now.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
