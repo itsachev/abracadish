@@ -148,9 +148,59 @@ export default function ResultsPage() {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted">
-              {dish.cuisine} · {dish.region}
+              {[dish.classification, dish.cuisine, dish.region].filter(Boolean).join(" · ")}
             </p>
           </div>
+
+          {(() => {
+            const profileRows = [
+              ["Protein", dish.protein],
+              ["Sauce", dish.sauce],
+              ["Garnish", dish.garnish],
+              ["Technique", dish.preparationTechnique],
+              ["Texture", dish.texture],
+            ].filter(([, value]) => value);
+
+            if (profileRows.length === 0 && !dish.visualCharacteristics && dish.ingredientCombinations.length === 0) {
+              return null;
+            }
+
+            return (
+              <section className="mt-6 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+                <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  Dish profile
+                </h2>
+
+                {profileRows.length > 0 && (
+                  <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">
+                    {profileRows.map(([label, value]) => (
+                      <div key={label} className="mb-3">
+                        <dt className="text-xs text-muted">{label}</dt>
+                        <dd className="text-foreground/90">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                {dish.visualCharacteristics && (
+                  <p className="mt-3 text-xs italic text-muted">{dish.visualCharacteristics}</p>
+                )}
+
+                {dish.ingredientCombinations.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {dish.ingredientCombinations.map((combo) => (
+                      <span
+                        key={combo}
+                        className="rounded-full bg-white/8 px-2.5 py-1 text-xs text-foreground/80"
+                      >
+                        {combo}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </section>
+            );
+          })()}
 
           <section className="mt-6">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">

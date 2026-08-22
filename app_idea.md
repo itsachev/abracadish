@@ -111,7 +111,6 @@ The system should rank recipes based on multiple signals:
 - garnish
 - preparation technique
 - texture
-- recipe metadata
 - regional variations
 - potentially restaurant information
 - potentially user-provided contextual information
