@@ -108,6 +108,17 @@ This only captures the data — there's still no backend to persist scans to, so
 
 `lib/scanLocation.js`'s `readScanLocation()` (used as `LocationPrompt`'s `useSyncExternalStore` snapshot) called `JSON.parse` on every invocation, returning a brand-new object reference each time even when the underlying data hadn't changed — `useSyncExternalStore` requires a stable reference when nothing changed, or it re-renders forever ("Maximum update depth exceeded"). Fixed with the same cached-reference guard already used in `lib/savedRecipes.js`'s `getSavedIdsSnapshot`, which was itself the safe reference I should have copied the first time. Checked for the same pattern elsewhere — `savedRecipes.js` already has the guard, and the one other `JSON.parse` in the codebase (`lib/gemini.js`) isn't a snapshot function, so this was the only instance.
 
+## 16. Supabase email/password auth
+
+Added user accounts ahead of scan history, per the user's request. Email + password, chosen over magic link or Google sign-in for zero extra external setup (no OAuth client, no SMTP dependency for the core flow).
+
+- `lib/supabaseClient.js` — enabled `persistSession`/`autoRefreshToken`/`detectSessionInUrl` on the shared client so it can drive auth from client components. Harmless for its existing server-side callers (`lib/recipes.js`) since there's no `window` there to persist to.
+- `components/Header.js` — new sticky top header (shown on every page except the full-bleed `/scan` and `/cook` routes, same exclusion list as the bottom nav): brand link, plus Sign in/Sign up links when signed out or the user's email + Sign out when signed in. Auth state starts `undefined` (session check is inherently async) so server and client's first render agree — no hydration risk here, unlike the earlier sessionStorage cases.
+- `app/login/page.js`, `app/signup/page.js` — plain email/password forms calling `supabase.auth.signInWithPassword` / `signUp` directly (no server route needed, this goes straight to Supabase Auth from the client). Signup branches on whether a session comes back immediately vs. requires email confirmation (project-setting-dependent — showed a "check your email" state for the latter).
+- Verified end-to-end against the live project: signup, sign-in, and sign-out all round-tripped correctly. This project currently has email confirmation off, so signup logs a user in immediately.
+
+Not yet done: no route protection/redirects (any page is reachable regardless of auth state — nothing needs it yet), and the scan-history feature this was built for isn't wired up yet (no `scans` table, no "Save scan" action).
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
