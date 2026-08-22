@@ -77,6 +77,10 @@ Also reviewed the reference design artifact ("Abracadish Flow", linked in CLAUDE
 
 With recipe sourcing deferred (see above), showing "Recipe match" results built on only 3 hardcoded recipes was misleading for anything else photographed. Scoped the removal to just the `/results` page: it now stops after dish recognition (name, confidence, ingredients, clarifying questions) and no longer calls `/api/match-recipes` or renders `RecipeCard`/`ConfidenceBar`. Left everything else intact for later: the `/api/match-recipes` route, `/recipe/[id]`, `/cook/[id]`, `/saved`, and the full Supabase/pgvector/embeddings backend — none of it was deleted, it's just not reachable from the scan flow right now.
 
+## 10. Restyled the ingredients section on /results
+
+Restyled "Confirmed"/"Likely" ingredients as tinted pill rows with tier-colored icons (green checkmark-circle for Confirmed, amber dashed-circle for Likely) under a single "What we see" label, replacing the plain bulleted lists — borrowed the icon/pill treatment from the Recognition screen in the reference design artifact, but kept the app's existing dark neutral palette and Geist font rather than adopting the artifact's warm terracotta/serif look (per the earlier "keep it as it is for now" decision).
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).

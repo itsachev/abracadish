@@ -108,32 +108,68 @@ export default function ResultsPage() {
           </div>
 
           <section className="mt-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
-              Likely ingredients
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
+              What we see
             </h2>
-            <ul className="mt-2 space-y-1.5">
+
+            <div className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-emerald-400">
+              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.9" />
+                <path
+                  d="M8 12.5l2.5 2.5L16 9.5"
+                  stroke="currentColor"
+                  strokeWidth="1.9"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Confirmed
+            </div>
+            <div className="mt-2 space-y-2">
               {dish.confirmedIngredients.map((ingredient) => (
-                <li key={ingredient.name} className="flex items-center gap-2 text-sm text-foreground/90">
-                  <span className="text-emerald-400">✓</span>
-                  {ingredient.name}
+                <div
+                  key={ingredient.name}
+                  className="flex items-center justify-between rounded-2xl bg-emerald-400/10 px-4 py-3.5 text-sm"
+                >
+                  <span className="text-foreground/90">{ingredient.name}</span>
                   <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
+
             {dish.possibleIngredients.length > 0 && (
               <>
-                <h2 className="mt-4 text-sm font-semibold uppercase tracking-wide text-muted">
-                  Possible
-                </h2>
-                <ul className="mt-2 space-y-1.5">
+                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-amber-400">
+                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9.5"
+                      stroke="currentColor"
+                      strokeWidth="1.9"
+                      strokeDasharray="2.2 3"
+                    />
+                    <path
+                      d="M9.6 9.6c.3-1 1.2-1.7 2.4-1.7 1.3 0 2.4.9 2.4 2.1 0 1.6-2.4 1.7-2.4 3.4"
+                      stroke="currentColor"
+                      strokeWidth="1.9"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="12" cy="16.6" r="0.9" fill="currentColor" />
+                  </svg>
+                  Likely
+                </div>
+                <div className="mt-2 space-y-2">
                   {dish.possibleIngredients.map((ingredient) => (
-                    <li key={ingredient.name} className="flex items-center gap-2 text-sm text-muted">
-                      <span>?</span>
-                      {ingredient.name}
+                    <div
+                      key={ingredient.name}
+                      className="flex items-center justify-between rounded-2xl bg-amber-400/10 px-4 py-3.5 text-sm"
+                    >
+                      <span className="text-foreground/90">{ingredient.name}</span>
                       <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </>
             )}
           </section>
