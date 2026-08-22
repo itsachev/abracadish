@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import RecipeCard from "@/components/RecipeCard";
 import ConfidenceBar from "@/components/ConfidenceBar";
-import { getDish, getRecipesForDish } from "@/lib/mockData";
+import { getRecipesForDish, slugifyDishName } from "@/lib/mockData";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
-const RECOGNIZED_DISH_ID = "chicken-tikka-masala";
 
 export default function ResultsPage() {
   const router = useRouter();
   const [photo] = useState(() =>
     typeof window === "undefined" ? null : sessionStorage.getItem(PHOTO_KEY)
   );
-  const [analyzing, setAnalyzing] = useState(true);
+  const [dish, setDish] = useState(null);
+  const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
 
   useEffect(() => {
@@ -22,14 +22,37 @@ export default function ResultsPage() {
       router.replace("/scan");
       return;
     }
-    const timer = setTimeout(() => setAnalyzing(false), 1200);
-    return () => clearTimeout(timer);
+
+    let cancelled = false;
+
+    fetch("/api/recognize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: photo }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          throw new Error(body?.error ?? "Recognition failed.");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!cancelled) setDish(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message || "Something went wrong.");
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [photo, router]);
 
   if (!photo) return null;
 
-  const dish = getDish(RECOGNIZED_DISH_ID);
-  const recipes = getRecipesForDish(RECOGNIZED_DISH_ID);
+  const analyzing = !dish && !error;
+  const recipes = dish ? getRecipesForDish(slugifyDishName(dish.name)) : [];
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
@@ -54,12 +77,27 @@ export default function ResultsPage() {
         </button>
       </div>
 
-      {analyzing ? (
+      {analyzing && (
         <div className="mt-10 flex flex-col items-center gap-3 text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
           <p className="text-sm text-muted">Analyzing your photo…</p>
         </div>
-      ) : (
+      )}
+
+      {error && (
+        <div className="mt-10 flex flex-col items-center gap-3 text-center">
+          <p className="text-sm text-muted">{error}</p>
+          <button
+            type="button"
+            onClick={() => router.push("/scan")}
+            className="gradient-accent rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            Try another photo
+          </button>
+        </div>
+      )}
+
+      {dish && (
         <>
           <div className="mt-6">
             <div className="flex items-center justify-between">
@@ -86,18 +124,22 @@ export default function ResultsPage() {
                 </li>
               ))}
             </ul>
-            <h2 className="mt-4 text-sm font-semibold uppercase tracking-wide text-muted">
-              Possible
-            </h2>
-            <ul className="mt-2 space-y-1.5">
-              {dish.possibleIngredients.map((ingredient) => (
-                <li key={ingredient.name} className="flex items-center gap-2 text-sm text-muted">
-                  <span>?</span>
-                  {ingredient.name}
-                  <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
-                </li>
-              ))}
-            </ul>
+            {dish.possibleIngredients.length > 0 && (
+              <>
+                <h2 className="mt-4 text-sm font-semibold uppercase tracking-wide text-muted">
+                  Possible
+                </h2>
+                <ul className="mt-2 space-y-1.5">
+                  {dish.possibleIngredients.map((ingredient) => (
+                    <li key={ingredient.name} className="flex items-center gap-2 text-sm text-muted">
+                      <span>?</span>
+                      {ingredient.name}
+                      <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </section>
 
           {dish.clarifyingQuestions.length > 0 && (
@@ -136,17 +178,27 @@ export default function ResultsPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
               Recipe match
             </h2>
-            <div className="mt-2">
-              <ConfidenceBar label="Overall recipe match" value={recipes[0]?.matchScore ?? 0} />
-            </div>
-            <p className="mb-2 mt-4 text-sm text-muted">
-              We found {recipes.length} recipes that look similar.
-            </p>
-            <div className="space-y-3">
-              {recipes.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
-              ))}
-            </div>
+            {recipes.length > 0 ? (
+              <>
+                <div className="mt-2">
+                  <ConfidenceBar label="Overall recipe match" value={recipes[0]?.matchScore ?? 0} />
+                </div>
+                <p className="mb-2 mt-4 text-sm text-muted">
+                  We found {recipes.length} recipes that look similar.
+                </p>
+                <div className="space-y-3">
+                  {recipes.map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="mt-3 rounded-2xl border border-border bg-surface p-4 text-sm text-muted">
+                We don&apos;t have recipes for &quot;{dish.name}&quot; in our starter collection yet
+                — try photographing a chicken tikka masala for the full demo, or check back soon
+                as we grow the recipe database.
+              </div>
+            )}
           </section>
         </>
       )}

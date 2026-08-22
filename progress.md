@@ -39,9 +39,18 @@ Verified with `npm run build` and `npm run lint` (both clean) after every step; 
 - **Photo size safety**: `CameraCapture` now downscales every captured/uploaded photo to a max 1280px edge (JPEG quality 0.82) before storing it, instead of storing the raw camera-resolution frame — avoids blowing past `sessionStorage`'s ~5–10MB quota on real device photos. A gallery upload now decodes via `createImageBitmap` and is drawn through the same resize path as a live capture. `sessionStorage.setItem` is wrapped in try/catch with a dismissible on-screen notice as a fallback, kept separate from the camera-permission error state so a bad file doesn't kill an otherwise-working camera preview.
 - **Retake / re-scan affordance**: `/results` now has a "Retake" button overlaid on the captured photo (back to `/scan`); `/recipe/[id]` has a "Scan another dish" link, closing the dead end that previously required the browser back button or bottom nav.
 
+## 6. Gemini dish recognition (live)
+
+- `lib/gemini.js` — server-only module calling the Gemini Developer API (`gemini-3.5-flash`, current cost-effective vision/free-tier model — 2.5 Flash is being deprecated in Oct 2026) with a `responseSchema` to force structured JSON output (dish name, confidence, cuisine, region, confirmed/possible ingredients, 0–2 clarifying questions), plus server-side validation/clamping of the parsed result before it's ever sent to the client (per `app_idea.md`'s "validate model output before displaying it" principle).
+- `app/api/recognize/route.js` — Next.js Route Handler: validates the incoming image data URL, calls `recognizeDish`, returns normalized JSON or a typed error response.
+- `/results` now POSTs the captured photo to `/api/recognize` instead of using a hardcoded mock dish, with real loading/error states (an error shows a "Try another photo" retry).
+- `lib/mockData.js` — dropped the now-unused static `DISHES` mock; kept the recipe mock DB (still just one seeded family, `chicken-tikka-masala`) and added `slugifyDishName()` to match the AI's recognized dish name against it. Recognizing anything else now shows an honest "we don't have recipes for this yet" empty state rather than mismatched results — recipe retrieval is still mocked pending the real Supabase + pgvector engine.
+- `.env.local` (git-ignored) holds `GEMINI_API_KEY` plus Supabase credentials (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) provided by the user, ready for the next step; `.env.example` documents the required variables without values.
+- Verified end-to-end with a real request against the live Gemini API (structured JSON schema response confirmed working, including honest low-confidence output on a non-food test image).
+
 ## Not started yet
 
-- Real Gemini-powered dish recognition, ingredient inference, and recipe embeddings (currently all mocked in `lib/mockData.js`).
-- Supabase (Postgres + pgvector) integration for structured recipes and recipe retrieval/ranking.
-- Actual photo upload to a backend (photos currently stay client-side in `sessionStorage`).
+- Supabase (Postgres + pgvector) integration for structured recipes and real recipe retrieval/ranking (credentials are in `.env.local`, schema/client code not built yet).
+- Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
+- Gemini-based recipe embeddings for the retrieval engine.
 - Capacitor wrapping for Android/iOS distribution (planned per earlier discussion, not started).
