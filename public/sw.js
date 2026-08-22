@@ -1,4 +1,4 @@
-const CACHE_NAME = "abracadish-shell-v1";
+const CACHE_NAME = "abracadish-shell-v2";
 const APP_SHELL = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
@@ -21,9 +21,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // Network-first: always prefer the latest deployed version when online.
+  // Cache is only a fallback for genuinely offline use, and gets refreshed
+  // with every successful fetch so that fallback stays reasonably current.
   event.respondWith(
-    caches
-      .match(event.request)
-      .then((cached) => cached || fetch(event.request).catch(() => caches.match("/")))
+    fetch(event.request)
+      .then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/")))
   );
 });

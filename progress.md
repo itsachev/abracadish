@@ -127,6 +127,10 @@ Not yet done: no route protection/redirects (any page is reachable regardless of
 - `components/SaveScanButton.js` — new "Save this scan" action below the location card: signed out shows a "Sign in to save this scan" hint (linking to `/login`) instead of a working button; signed in, it inserts the dish name/confidence/cuisine/ingredients/clarifying-question answers/restaurant name/location into a new `scans` table, with saving/saved/error states.
 - `supabase/schema_scans.sql` — new migration (user to run, same pattern as `schema.sql`): `scans` table with RLS restricting each user to their own rows (`auth.uid() = user_id`) for select/insert/delete.
 
+## 18. Fixed the service worker serving stale content
+
+The Header wasn't showing up in the browser despite being committed and the dev server running the latest code — `public/sw.js`'s fetch handler was cache-first for every GET request, and the cache name (`abracadish-shell-v1`) never changed across any of this session's commits. Once the service worker cached the app shell on day one, it kept serving that exact snapshot indefinitely regardless of how many times the app was redeployed — a real bug, not specific to the Header. Fixed by switching to network-first (cache is now only a fallback for genuinely offline use, and gets refreshed on every successful fetch) and bumping the cache name to `abracadish-shell-v2` so the old stale cache gets purged via the existing `activate` cleanup logic. Users with the old service worker already installed may need one manual hard-refresh (or DevTools → Application → Service Workers → Unregister) to pick up the fix immediately, since the browser's own SW update lifecycle takes at least one navigation cycle.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
