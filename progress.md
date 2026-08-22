@@ -93,6 +93,17 @@ Hit a real Gemini 429 ("You exceeded your current quota") while testing photo up
 
 Hit a 429 quota-exceeded error on `gemini-3.5-flash` from testing volume. Free-tier quotas are per-model, not shared account-wide, so switched `lib/gemini.js` to `gemini-3.5-flash-lite` — a separate quota bucket, still free-tier, trades some accuracy for being Google's cheapest/highest-throughput current-gen model. Verified working end-to-end against the live API and through `/api/recognize`.
 
+## 14. Restaurant Mode Phase 1 — optional location capture
+
+Implemented the staged approach discussed for `app_idea.md`'s "Restaurant Mode" (section 9), UI/UX-first before any Maps/Places billing setup:
+
+- `lib/exifLocation.js` — reads GPS EXIF from an uploaded photo's original `File` *before* `CameraCapture` redraws it onto a canvas (which strips all metadata). Uses the `exifr` library rather than hand-rolling EXIF parsing, since silently mis-parsed GPS coordinates would be a real (privacy-sensitive) correctness risk. Verified the import/invocation path works (`exifr`'s `gps()` lives on its default export); the no-GPS case returns `undefined` as expected. Couldn't verify the positive case — no real GPS-tagged test photo was available in this environment — so that path needs a real-device check.
+- `lib/scanLocation.js` / `lib/locationPreference.js` — sessionStorage for the current scan's location, localStorage for "user declined geolocation once, don't ask again."
+- `components/LocationPrompt.js` — renders on `/results` below the clarifying questions: an optional restaurant-name text field, always available; if EXIF already found a location, shows a quiet "Location detected from photo" confirmation instead of asking anything; otherwise shows a single "Add location" chip that requests browser geolocation only when tapped (no cold permission prompt on page load) and remembers a real permission denial so it stops asking. Reads both storages via `useSyncExternalStore`, following the same hydration-safe pattern established for the photo/saved-recipes reads.
+- Live camera captures clear any stale location from a previous scan (a canvas-drawn video frame never has EXIF).
+
+This only captures the data — there's still no backend to persist scans to, so the restaurant name/location currently just lives in page state for this one view. It becomes useful once scan history exists and/or Places API (Phase 2, requires a Google Cloud billing account) is wired in to turn coordinates into an actual restaurant match + map pin.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).

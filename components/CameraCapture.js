@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { extractGpsFromFile } from "@/lib/exifLocation";
+import { saveScanLocation } from "@/lib/scanLocation";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
 const MAX_DIMENSION = 1280;
@@ -82,6 +84,8 @@ export default function CameraCapture() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
+    // A live camera frame drawn to canvas never carries EXIF, unlike a gallery upload.
+    saveScanLocation(null);
     goToResults(drawScaledToCanvas(canvas, video, video.videoWidth, video.videoHeight));
   }
 
@@ -91,6 +95,11 @@ export default function CameraCapture() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     try {
+      // Read EXIF GPS from the original file before createImageBitmap + canvas
+      // redraw strips all metadata.
+      const location = await extractGpsFromFile(file);
+      saveScanLocation(location);
+
       const bitmap = await createImageBitmap(file);
       const dataUrl = drawScaledToCanvas(canvas, bitmap, bitmap.width, bitmap.height);
       bitmap.close?.();

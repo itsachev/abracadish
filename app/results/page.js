@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import LocationPrompt from "@/components/LocationPrompt";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
 
@@ -27,6 +28,7 @@ export default function ResultsPage() {
   const [dish, setDish] = useState(null);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [restaurantName, setRestaurantName] = useState("");
 
   useEffect(() => {
     if (!photo) {
@@ -222,6 +224,8 @@ export default function ResultsPage() {
               </div>
             </section>
           )}
+
+          <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
         </>
       )}
     </div>
