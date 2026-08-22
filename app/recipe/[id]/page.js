@@ -84,6 +84,13 @@ export default async function RecipePage({ params }) {
         </Link>
         <SaveButton recipeId={recipe.id} className="flex-none" />
       </div>
+
+      <Link
+        href="/scan"
+        className="mt-4 block text-center text-sm font-medium text-muted underline-offset-4 hover:text-foreground hover:underline"
+      >
+        Scan another dish
+      </Link>
     </div>
   );
 }

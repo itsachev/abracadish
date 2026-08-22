@@ -34,6 +34,11 @@ Verified with `npm run build` and `npm run lint` (both clean) after every step; 
 - Reworked every page and shared component (home, results, recipe detail, cooking mode, saved, bottom nav, recipe card, match badge, confidence bar, save button, camera capture) onto the new dark palette.
 - Updated `app/manifest.js` and `viewport.themeColor` to dark (`#08080a`) so the installed PWA's splash screen and browser chrome match.
 
+## 5. Frontend gap fixes
+
+- **Photo size safety**: `CameraCapture` now downscales every captured/uploaded photo to a max 1280px edge (JPEG quality 0.82) before storing it, instead of storing the raw camera-resolution frame — avoids blowing past `sessionStorage`'s ~5–10MB quota on real device photos. A gallery upload now decodes via `createImageBitmap` and is drawn through the same resize path as a live capture. `sessionStorage.setItem` is wrapped in try/catch with a dismissible on-screen notice as a fallback, kept separate from the camera-permission error state so a bad file doesn't kill an otherwise-working camera preview.
+- **Retake / re-scan affordance**: `/results` now has a "Retake" button overlaid on the captured photo (back to `/scan`); `/recipe/[id]` has a "Scan another dish" link, closing the dead end that previously required the browser back button or bottom nav.
+
 ## Not started yet
 
 - Real Gemini-powered dish recognition, ingredient inference, and recipe embeddings (currently all mocked in `lib/mockData.js`).

@@ -33,9 +33,25 @@ export default function ResultsPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <div className="overflow-hidden rounded-2xl border border-border bg-white/5">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-white/5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={photo} alt="Captured dish" className="h-56 w-full object-cover" />
+        <button
+          type="button"
+          onClick={() => router.push("/scan")}
+          className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+            <path
+              d="M4 4v5h5M20 20v-5h-5M4.5 15a8 8 0 0 0 14.5 3.5M19.5 9A8 8 0 0 0 5 5.5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Retake
+        </button>
       </div>
 
       {analyzing ? (

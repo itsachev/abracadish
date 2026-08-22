@@ -4,6 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
+const MAX_DIMENSION = 1280;
+const JPEG_QUALITY = 0.82;
+
+function drawScaledToCanvas(canvas, source, sourceWidth, sourceHeight) {
+  const scale = Math.min(1, MAX_DIMENSION / Math.max(sourceWidth, sourceHeight));
+  canvas.width = Math.round(sourceWidth * scale);
+  canvas.height = Math.round(sourceHeight * scale);
+  canvas.getContext("2d").drawImage(source, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+}
 
 export default function CameraCapture() {
   const router = useRouter();
@@ -12,6 +22,7 @@ export default function CameraCapture() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
   const [cameraError, setCameraError] = useState(null);
+  const [notice, setNotice] = useState(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -50,8 +61,19 @@ export default function CameraCapture() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
   function goToResults(dataUrl) {
-    sessionStorage.setItem(PHOTO_KEY, dataUrl);
+    try {
+      sessionStorage.setItem(PHOTO_KEY, dataUrl);
+    } catch {
+      setNotice("That photo was too large to use. Try again or pick a smaller image.");
+      return;
+    }
     streamRef.current?.getTracks().forEach((track) => track.stop());
     router.push("/results");
   }
@@ -60,18 +82,22 @@ export default function CameraCapture() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d").drawImage(video, 0, 0);
-    goToResults(canvas.toDataURL("image/jpeg", 0.85));
+    goToResults(drawScaledToCanvas(canvas, video, video.videoWidth, video.videoHeight));
   }
 
-  function handleFileChosen(event) {
+  async function handleFileChosen(event) {
     const file = event.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => goToResults(reader.result);
-    reader.readAsDataURL(file);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    try {
+      const bitmap = await createImageBitmap(file);
+      const dataUrl = drawScaledToCanvas(canvas, bitmap, bitmap.width, bitmap.height);
+      bitmap.close?.();
+      goToResults(dataUrl);
+    } catch {
+      setNotice("Couldn't read that photo. Try a different one.");
+    }
   }
 
   return (
@@ -101,6 +127,11 @@ export default function CameraCapture() {
               <circle cx="12" cy="13" r="3.4" stroke="currentColor" strokeWidth="1.8" />
             </svg>
             <p className="text-sm">{cameraError}</p>
+          </div>
+        )}
+        {notice && (
+          <div className="absolute inset-x-4 top-[calc(env(safe-area-inset-top)+4rem)] z-10 rounded-xl border border-white/15 bg-black/70 px-4 py-3 text-center text-sm text-white backdrop-blur-sm">
+            {notice}
           </div>
         )}
         <canvas ref={canvasRef} className="hidden" />
