@@ -1,0 +1,8 @@
+- **App name**: Abracadish
+- **Client**: Next.js (App Router) + JavaScript (no TypeScript), built as an installable PWA (not a native app for MVP — avoids app-store review cycles). Camera access via browser APIs.
+- **Styling**: Tailwind CSS.
+- **Backend**: no separate service for MVP — Next.js API routes / server actions, keeping the AI provider key server-side only.
+- **AI**: Gemini API (free tier) for both dish recognition (vision) and structured ingredient inference; Gemini embeddings for recipe vectors, to avoid a second AI provider during MVP.
+- **Data**: Supabase (Postgres + `pgvector`) — structured recipes and their embeddings live in the same database, plus built-in auth and file storage for uploaded photos.
+- **Hosting**: Vercel.
+- **DesignAtrifact**: https://claude.ai/code/artifact/e3bb7d59-c075-40df-86d1-d8a5924e59fc?org=edab0815-9b7e-4e5c-84f3-cffe72082850
