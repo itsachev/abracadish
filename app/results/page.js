@@ -19,6 +19,10 @@ function getPhotoServerSnapshot() {
   return null;
 }
 
+function isNotADish(dish) {
+  return dish.confidence === 0 && dish.confirmedIngredients.length === 0;
+}
+
 export default function ResultsPage() {
   const router = useRouter();
   // useSyncExternalStore (not a useState lazy initializer) so the server
@@ -113,7 +117,28 @@ export default function ResultsPage() {
         </div>
       )}
 
-      {dish && (
+      {dish && isNotADish(dish) && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">{dish.name}</h1>
+            <span className="rounded-full bg-white/8 px-2.5 py-1 text-xs font-semibold text-muted">
+              {Math.round(dish.confidence * 100)}% confidence
+            </span>
+          </div>
+          <p className="mt-4 text-sm text-muted">
+            We couldn&apos;t recognize a dish in this photo. Try a clearer photo of your food.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push("/scan")}
+            className="gradient-accent mt-5 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            Try another photo
+          </button>
+        </div>
+      )}
+
+      {dish && !isNotADish(dish) && (
         <>
           <div className="mt-6">
             <div className="flex items-center justify-between">
@@ -228,7 +253,7 @@ export default function ResultsPage() {
 
           <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
 
-          <SaveScanButton dish={dish} answers={answers} restaurantName={restaurantName} />
+          <SaveScanButton dish={dish} answers={answers} restaurantName={restaurantName} photo={photo} />
         </>
       )}
     </div>

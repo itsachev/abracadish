@@ -19,11 +19,8 @@ export default function Home() {
         }}
       />
 
-      <div className="relative mx-auto flex max-w-md flex-col px-6 pt-16">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-          Abracadish
-        </span>
-        <h1 className="mt-3 text-4xl font-bold leading-[1.1] tracking-tight">
+      <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
+        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight">
           Snap it. Identify it.
           <br />
           <span className="gradient-text">Find the recipe.</span>

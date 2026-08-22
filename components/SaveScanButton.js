@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useAuthUser } from "@/lib/useAuthUser";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { uploadScanPhoto } from "@/lib/scans";
 import { readScanLocation } from "@/lib/scanLocation";
 
 function subscribeNoop() {
@@ -14,13 +15,15 @@ function getServerSnapshotNull() {
   return null;
 }
 
-export default function SaveScanButton({ dish, answers, restaurantName }) {
+export default function SaveScanButton({ dish, answers, restaurantName, photo }) {
   const user = useAuthUser();
   const location = useSyncExternalStore(subscribeNoop, readScanLocation, getServerSnapshotNull);
   const [status, setStatus] = useState("idle"); // idle | saving | saved | error
 
   async function handleSave() {
     setStatus("saving");
+
+    const imagePath = photo ? await uploadScanPhoto(user.id, photo) : null;
 
     const { error } = await getSupabaseClient()
       .from("scans")
@@ -36,6 +39,7 @@ export default function SaveScanButton({ dish, answers, restaurantName }) {
         restaurant_name: restaurantName || null,
         location: location ? { lat: location.lat, lng: location.lng, source: location.source } : null,
         location_label: location?.label ?? null,
+        image_path: imagePath,
       });
 
     setStatus(error ? "error" : "saved");

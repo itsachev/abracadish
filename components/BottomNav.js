@@ -68,14 +68,14 @@ export default function BottomNav() {
       className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-black/90 backdrop-blur-xl
                  pb-[env(safe-area-inset-bottom)]"
     >
-      <ul className="mx-auto flex max-w-md items-stretch justify-around">
+      <ul className="mx-auto flex h-16 max-w-md items-stretch justify-around">
         {TABS.map((tab) => {
           const active = tab.href === "/" ? pathname === "/" : pathname?.startsWith(tab.href);
           return (
             <li key={tab.href} className="flex-1">
               <Link
                 href={tab.href}
-                className={`relative flex flex-col items-center gap-1 py-2.5 text-xs font-medium transition-colors ${
+                className={`relative flex h-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
                   active ? "text-white" : "text-muted"
                 }`}
               >
