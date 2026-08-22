@@ -104,6 +104,10 @@ Implemented the staged approach discussed for `app_idea.md`'s "Restaurant Mode" 
 
 This only captures the data — there's still no backend to persist scans to, so the restaurant name/location currently just lives in page state for this one view. It becomes useful once scan history exists and/or Places API (Phase 2, requires a Google Cloud billing account) is wired in to turn coordinates into an actual restaurant match + map pin.
 
+## 15. Fixed an infinite-render loop on /results (LocationPrompt)
+
+`lib/scanLocation.js`'s `readScanLocation()` (used as `LocationPrompt`'s `useSyncExternalStore` snapshot) called `JSON.parse` on every invocation, returning a brand-new object reference each time even when the underlying data hadn't changed — `useSyncExternalStore` requires a stable reference when nothing changed, or it re-renders forever ("Maximum update depth exceeded"). Fixed with the same cached-reference guard already used in `lib/savedRecipes.js`'s `getSavedIdsSnapshot`, which was itself the safe reference I should have copied the first time. Checked for the same pattern elsewhere — `savedRecipes.js` already has the guard, and the one other `JSON.parse` in the codebase (`lib/gemini.js`) isn't a snapshot function, so this was the only instance.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
