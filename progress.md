@@ -48,9 +48,24 @@ Verified with `npm run build` and `npm run lint` (both clean) after every step; 
 - `.env.local` (git-ignored) holds `GEMINI_API_KEY` plus Supabase credentials (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) provided by the user, ready for the next step; `.env.example` documents the required variables without values.
 - Verified end-to-end with a real request against the live Gemini API (structured JSON schema response confirmed working, including honest low-confidence output on a non-food test image).
 
+## 7. Supabase + pgvector recipe retrieval (live)
+
+- `supabase/schema.sql` — migration (run manually by the user in the Supabase SQL Editor, per their choice to keep DB credentials out of automated tooling): enables `pgvector`, creates the `recipes` table, enables RLS with a public-read policy, and defines `match_recipes()`, a cosine-similarity search function granted to `anon`/`authenticated`.
+- `lib/supabaseClient.js` — shared Supabase client using the anon/publishable key (safe for both server and client code; reads are gated entirely by the RLS policy).
+- `lib/embeddings.js` — Gemini `gemini-embedding-001` text embeddings (768 dimensions via `outputDimensionality`), server-only.
+- `lib/recipeMatch.js` — shared, secret-free helpers: builds the text that gets embedded (for both recipes and the recognized-dish query), and `computeMatchReasons()`, which derives "why this matches" bullets by comparing the recognized dish's cuisine/protein/ingredients against a candidate recipe's structured fields — real structured comparison, not static copy.
+- `lib/recipes.js` — `getRecipeById` / `getRecipesByIds`, reading from Supabase and normalizing column names back to the shape the UI expects.
+- `scripts/seed-recipes.mjs` — one-off script (uses `SUPABASE_SERVICE_ROLE_KEY` directly, run manually, never imported by app code) that embeds and upserts the 3 starter recipes (previously hardcoded in the now-deleted `lib/mockData.js`) into Supabase. Run successfully; all 3 rows seeded with real embeddings.
+- `app/api/match-recipes/route.js` — new route: embeds the recognized dish, calls `match_recipes` via RPC, filters out anything below a 0.65 cosine-similarity threshold (so an unrelated dish returns zero matches instead of forcing the nearest neighbor through — verified with a "Greek Salad" query returning `{recipes: []}` while "Chicken Tikka Masala" correctly returns all 3 seeded recipes ranked 0.82 / 0.79 / 0.73), and attaches computed match reasons.
+- `/results` now does two sequential live calls — `/api/recognize` then `/api/match-recipes` — with independent loading/error states for each stage.
+- `/recipe/[id]` and `/cook/[id]` now fetch the recipe from Supabase (server-side) instead of a mock lookup. Since match score/reasons are query-time results (not stored on the recipe row), `RecipeCard` now carries them to the detail page via URL search params (`?score=...&reasons=...`) rather than re-running retrieval there; visiting a recipe directly (e.g. from Saved) just omits that section.
+- `/saved` now fetches full recipe rows from Supabase by id (via the anon client, client-side) instead of a mock lookup.
+- `package.json` marked `"type": "module"` (no CommonJS anywhere in the codebase) to let the seed script's ESM imports resolve cleanly.
+- Verified against the live database: real end-to-end request/response for both recognition and matching, confirmed correct ranking and correct rejection of an unrelated dish.
+
 ## Not started yet
 
-- Supabase (Postgres + pgvector) integration for structured recipes and real recipe retrieval/ranking (credentials are in `.env.local`, schema/client code not built yet).
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
-- Gemini-based recipe embeddings for the retrieval engine.
+- Growing the recipe catalog beyond the 3 seeded chicken-tikka-masala-family recipes (everything else currently returns "no recipes yet").
+- Retuning the 0.65 similarity threshold once there's a larger, more varied catalog to calibrate against.
 - Capacitor wrapping for Android/iOS distribution (planned per earlier discussion, not started).

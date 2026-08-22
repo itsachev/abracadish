@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import RecipeCard from "@/components/RecipeCard";
 import ConfidenceBar from "@/components/ConfidenceBar";
-import { getRecipesForDish, slugifyDishName } from "@/lib/mockData";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
 
@@ -16,6 +15,8 @@ export default function ResultsPage() {
   const [dish, setDish] = useState(null);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [recipes, setRecipes] = useState(null);
+  const [matchError, setMatchError] = useState(null);
 
   useEffect(() => {
     if (!photo) {
@@ -49,10 +50,38 @@ export default function ResultsPage() {
     };
   }, [photo, router]);
 
+  useEffect(() => {
+    if (!dish) return;
+    let cancelled = false;
+
+    fetch("/api/match-recipes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dish }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          throw new Error(body?.error ?? "Recipe matching failed.");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!cancelled) setRecipes(data.recipes ?? []);
+      })
+      .catch((err) => {
+        if (!cancelled) setMatchError(err.message || "Couldn't find matching recipes.");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dish]);
+
   if (!photo) return null;
 
   const analyzing = !dish && !error;
-  const recipes = dish ? getRecipesForDish(slugifyDishName(dish.name)) : [];
+  const matching = Boolean(dish) && recipes === null && !matchError;
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
@@ -178,7 +207,21 @@ export default function ResultsPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
               Recipe match
             </h2>
-            {recipes.length > 0 ? (
+
+            {matching && (
+              <div className="mt-3 flex items-center gap-2 text-sm text-muted">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+                Searching our recipe catalog…
+              </div>
+            )}
+
+            {matchError && (
+              <div className="mt-3 rounded-2xl border border-border bg-surface p-4 text-sm text-muted">
+                {matchError}
+              </div>
+            )}
+
+            {recipes && recipes.length > 0 && (
               <>
                 <div className="mt-2">
                   <ConfidenceBar label="Overall recipe match" value={recipes[0]?.matchScore ?? 0} />
@@ -192,7 +235,9 @@ export default function ResultsPage() {
                   ))}
                 </div>
               </>
-            ) : (
+            )}
+
+            {recipes && recipes.length === 0 && (
               <div className="mt-3 rounded-2xl border border-border bg-surface p-4 text-sm text-muted">
                 We don&apos;t have recipes for &quot;{dish.name}&quot; in our starter collection yet
                 — try photographing a chicken tikka masala for the full demo, or check back soon

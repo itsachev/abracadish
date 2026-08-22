@@ -1,37 +1,18 @@
-// Placeholder recipe database standing in for the real Supabase + pgvector
-// recipe-retrieval engine. Dish recognition itself is now live (see lib/gemini.js) —
-// this file only covers the "find matching recipes" half of the pipeline, which
-// currently only has one recipe family seeded (chicken-tikka-masala).
+// One-off script: embeds and upserts the starter recipe catalog into Supabase.
+// Run manually with: node scripts/seed-recipes.mjs
+// Uses SUPABASE_SERVICE_ROLE_KEY directly (bypasses RLS) — never import this
+// file from application code.
 
-export function slugifyDishName(name) {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
+import { createClient } from "@supabase/supabase-js";
+import { buildRecipeEmbeddingText } from "../lib/recipeMatch.js";
 
-export const MATCH_TYPE_LABELS = {
-  official: "Official recipe",
-  likely: "Likely recipe",
-  similar: "Similar recipe",
-  "ai-generated": "AI-generated approximation",
-};
+process.loadEnvFile(".env.local");
 
-export const RECIPES = {
-  "ctm-classic": {
+const RECIPES = [
+  {
     id: "ctm-classic",
-    dishId: "chicken-tikka-masala",
     title: "Classic Chicken Tikka Masala",
-    matchScore: 0.92,
     matchType: "likely",
-    matchReasons: [
-      "Same main protein",
-      "Similar sauce",
-      "Similar garnish",
-      "Same cuisine",
-      "Similar ingredient profile",
-    ],
     cuisine: "Indian",
     protein: "Chicken",
     sauce: "Creamy tomato",
@@ -68,13 +49,10 @@ export const RECIPES = {
       dateAdded: "2026-01-01",
     },
   },
-  "butter-chicken": {
+  {
     id: "butter-chicken",
-    dishId: "chicken-tikka-masala",
     title: "Butter Chicken",
-    matchScore: 0.84,
     matchType: "similar",
-    matchReasons: ["Same main protein", "Similar sauce", "Same cuisine"],
     cuisine: "Indian",
     protein: "Chicken",
     sauce: "Buttery tomato",
@@ -102,13 +80,10 @@ export const RECIPES = {
       dateAdded: "2026-01-01",
     },
   },
-  "chicken-korma": {
+  {
     id: "chicken-korma",
-    dishId: "chicken-tikka-masala",
     title: "Chicken Korma",
-    matchScore: 0.73,
     matchType: "similar",
-    matchReasons: ["Same main protein", "Same cuisine", "Creamy sauce family"],
     cuisine: "Indian",
     protein: "Chicken",
     sauce: "Creamy nut-based",
@@ -135,14 +110,65 @@ export const RECIPES = {
       dateAdded: "2026-01-01",
     },
   },
-};
+];
 
-export function getRecipe(recipeId) {
-  return RECIPES[recipeId] ?? null;
+const EMBEDDING_API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent";
+
+async function embedText(apiKey, text) {
+  const response = await fetch(EMBEDDING_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    body: JSON.stringify({ content: { parts: [{ text }] }, outputDimensionality: 768 }),
+  });
+  if (!response.ok) {
+    throw new Error(`Embedding request failed (${response.status}): ${await response.text()}`);
+  }
+  const payload = await response.json();
+  return payload.embedding.values;
 }
 
-export function getRecipesForDish(dishId) {
-  return Object.values(RECIPES)
-    .filter((recipe) => recipe.dishId === dishId)
-    .sort((a, b) => b.matchScore - a.matchScore);
+async function main() {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!geminiKey || !supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing GEMINI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, or SUPABASE_SERVICE_ROLE_KEY in .env.local");
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
+
+  for (const recipe of RECIPES) {
+    process.stdout.write(`Embedding "${recipe.title}"... `);
+    const embedding = await embedText(geminiKey, buildRecipeEmbeddingText(recipe));
+
+    const { error } = await supabase.from("recipes").upsert({
+      id: recipe.id,
+      title: recipe.title,
+      cuisine: recipe.cuisine,
+      protein: recipe.protein,
+      sauce: recipe.sauce,
+      garnish: recipe.garnish,
+      match_type: recipe.matchType,
+      servings: recipe.servings,
+      ingredients: recipe.ingredients,
+      steps: recipe.steps,
+      source: recipe.source,
+      embedding,
+    });
+
+    if (error) {
+      console.log("FAILED");
+      throw new Error(`Upsert failed for ${recipe.id}: ${error.message}`);
+    }
+    console.log("done");
+  }
+
+  console.log(`\nSeeded ${RECIPES.length} recipes.`);
 }
+
+main().catch((error) => {
+  console.error(error.message);
+  process.exit(1);
+});

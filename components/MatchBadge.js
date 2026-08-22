@@ -1,4 +1,4 @@
-import { MATCH_TYPE_LABELS } from "@/lib/mockData";
+import { MATCH_TYPE_LABELS } from "@/lib/recipeMatch";
 
 const STYLES = {
   official: "bg-emerald-400/10 text-emerald-400",
