@@ -89,6 +89,10 @@ Restyled "Confirmed"/"Likely" ingredients as tinted pill rows with tier-colored 
 
 Hit a real Gemini 429 ("You exceeded your current quota") while testing photo upload — the error path itself worked (loading → error state → retry button), but it displayed the raw Gemini error JSON straight to the user. `lib/gemini.js` and `lib/embeddings.js` now log the full upstream error server-side and throw a clean, specific message instead (a friendly rate-limit notice for 429s, a generic "temporarily unavailable" otherwise) — nothing from the raw API response reaches the client.
 
+## 13. Switched recognition to gemini-3.5-flash-lite
+
+Hit a 429 quota-exceeded error on `gemini-3.5-flash` from testing volume. Free-tier quotas are per-model, not shared account-wide, so switched `lib/gemini.js` to `gemini-3.5-flash-lite` — a separate quota bucket, still free-tier, trades some accuracy for being Google's cheapest/highest-throughput current-gen model. Verified working end-to-end against the live API and through `/api/recognize`.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
