@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import LocationPrompt from "@/components/LocationPrompt";
+import SaveScanButton from "@/components/SaveScanButton";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
 
@@ -226,6 +227,8 @@ export default function ResultsPage() {
           )}
 
           <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
+
+          <SaveScanButton dish={dish} answers={answers} restaurantName={restaurantName} />
         </>
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { readScanLocation, saveScanLocation } from "@/lib/scanLocation";
 import { hasDeclinedLocation, setLocationDeclined } from "@/lib/locationPreference";
 
@@ -26,6 +26,34 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
   const [requesting, setRequesting] = useState(false);
 
   const location = storedLocation ?? addedLocation;
+
+  // Resolve a human-readable place name once we have coordinates. Guarded on
+  // location.label so this only fires once per location: saving the label
+  // back into scanLocation changes the stored raw string, which produces a
+  // new `location` object on the next render — but that one already has
+  // `label` set, so the effect no-ops instead of re-fetching forever.
+  useEffect(() => {
+    if (!location || location.label) return;
+    let cancelled = false;
+
+    fetch("/api/reverse-geocode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lat: location.lat, lng: location.lng }),
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.label) return;
+        const next = { ...location, label: data.label };
+        saveScanLocation(next);
+        setAddedLocation(next);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location]);
 
   function requestLocation() {
     if (!navigator.geolocation) return;
@@ -76,7 +104,8 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
               strokeLinejoin="round"
             />
           </svg>
-          Location {location.source === "exif" ? "detected from photo" : "added"}
+          {location.label ??
+            (location.source === "exif" ? "Location detected from photo" : "Location added")}
         </p>
       ) : (
         !declined && (

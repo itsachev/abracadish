@@ -1,26 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { useAuthUser } from "@/lib/useAuthUser";
 
-// undefined = session not checked yet, null = signed out, object = signed in.
-// This starts undefined on both server and client (getSession() is async),
-// so there's no hydration mismatch to worry about here.
 export default function Header() {
-  const [user, setUser] = useState(undefined);
-
-  useEffect(() => {
-    const supabase = getSupabaseClient();
-
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => listener.subscription.unsubscribe();
-  }, []);
+  const user = useAuthUser();
 
   async function handleSignOut() {
     await getSupabaseClient().auth.signOut();
@@ -36,7 +21,7 @@ export default function Header() {
         <div className="h-7 w-16" />
       ) : user ? (
         <div className="flex items-center gap-3">
-          <span className="max-w-[9rem] truncate text-xs text-muted">{user.email}</span>
+          <span className="max-w-36 truncate text-xs text-muted">{user.email}</span>
           <button
             type="button"
             onClick={handleSignOut}

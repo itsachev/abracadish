@@ -119,6 +119,14 @@ Added user accounts ahead of scan history, per the user's request. Email + passw
 
 Not yet done: no route protection/redirects (any page is reachable regardless of auth state — nothing needs it yet), and the scan-history feature this was built for isn't wired up yet (no `scans` table, no "Save scan" action).
 
+## 17. Reverse geocoding + Save scan action
+
+- `lib/reverseGeocode.js` / `app/api/reverse-geocode/route.js` — resolves lat/lng to a "City, Country" label via OpenStreetMap's Nominatim (free, no API key, no billing setup — unlike Google's Places/Maps path). Verified end-to-end: `{lat: 42.6977, lng: 23.3219}` → `"Sofia, Bulgaria"`. Flagged for later: Nominatim's usage policy expects a descriptive User-Agent and reasonable request volume; worth revisiting with a paid provider if usage grows past what's reasonable for a free shared service.
+- `LocationPrompt` now resolves and shows the real place name ("Sofia, Bulgaria") instead of the generic "Location added", and persists the resolved label back into the stored location so other components (the save action) can read it too.
+- `lib/useAuthUser.js` — extracted the auth-state hook out of `Header` so `SaveScanButton` can use the same logic without duplicating it.
+- `components/SaveScanButton.js` — new "Save this scan" action below the location card: signed out shows a "Sign in to save this scan" hint (linking to `/login`) instead of a working button; signed in, it inserts the dish name/confidence/cuisine/ingredients/clarifying-question answers/restaurant name/location into a new `scans` table, with saving/saved/error states.
+- `supabase/schema_scans.sql` — new migration (user to run, same pattern as `schema.sql`): `scans` table with RLS restricting each user to their own rows (`auth.uid() = user_id`) for select/insert/delete.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
