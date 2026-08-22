@@ -63,6 +63,14 @@ Verified with `npm run build` and `npm run lint` (both clean) after every step; 
 - `package.json` marked `"type": "module"` (no CommonJS anywhere in the codebase) to let the seed script's ESM imports resolve cleanly.
 - Verified against the live database: real end-to-end request/response for both recognition and matching, confirmed correct ranking and correct rejection of an unrelated dish.
 
+## 8. Recipe data sourcing — decision: deferred
+
+Investigated licensed recipe APIs to grow the catalog beyond the 3 hand-authored seed recipes (per `app_idea.md`'s explicit warning against scraping copyrighted recipe sites). Findings: no mainstream option is both genuinely free and viable for a real commercial app —
+- **TheMealDB**'s free test key explicitly disallows public/app-store release; commercial rights require a $2/month "supporter" upgrade.
+- **Spoonacular**'s free tier's terms don't explicitly ban commercial use, but caps at 50 points/day (not enough volume to seed or serve a real catalog), and its data storage/caching terms may conflict with permanently storing recipes + embeddings in Supabase the way we do now.
+
+Decision: skip recipe API integration for now. The catalog stays at the 3 hand-authored recipes seeded in `scripts/seed-recipes.mjs` until this is revisited.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
