@@ -81,6 +81,10 @@ With recipe sourcing deferred (see above), showing "Recipe match" results built 
 
 Restyled "Confirmed"/"Likely" ingredients as tinted pill rows with tier-colored icons (green checkmark-circle for Confirmed, amber dashed-circle for Likely) under a single "What we see" label, replacing the plain bulleted lists — borrowed the icon/pill treatment from the Recognition screen in the reference design artifact, but kept the app's existing dark neutral palette and Geist font rather than adopting the artifact's warm terracotta/serif look (per the earlier "keep it as it is for now" decision).
 
+## 11. Fixed a hydration-mismatch bug on /results
+
+`/results` used `useState(() => typeof window === "undefined" ? null : sessionStorage.getItem(PHOTO_KEY))` to read the captured photo. That's a real bug on any real reload/navigation: the server render always sees `null` (no `window`), but the client's very first render (before hydration reconciles) reads the real value already sitting in `sessionStorage` from `/scan` — server and client disagreeing on the first render is exactly what React's hydration mismatch error is warning about. Fixed by switching to `useSyncExternalStore` (same pattern already used in `SaveButton`/`saved` for localStorage) with a `getServerSnapshot` that always returns `null`, so server and client agree on the first pass; the real value then arrives via the store's normal client-side read, no extra effect or state needed.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
