@@ -85,6 +85,10 @@ Restyled "Confirmed"/"Likely" ingredients as tinted pill rows with tier-colored 
 
 `/results` used `useState(() => typeof window === "undefined" ? null : sessionStorage.getItem(PHOTO_KEY))` to read the captured photo. That's a real bug on any real reload/navigation: the server render always sees `null` (no `window`), but the client's very first render (before hydration reconciles) reads the real value already sitting in `sessionStorage` from `/scan` — server and client disagreeing on the first render is exactly what React's hydration mismatch error is warning about. Fixed by switching to `useSyncExternalStore` (same pattern already used in `SaveButton`/`saved` for localStorage) with a `getServerSnapshot` that always returns `null`, so server and client agree on the first pass; the real value then arrives via the store's normal client-side read, no extra effect or state needed.
 
+## 12. Stopped leaking raw API errors to the UI
+
+Hit a real Gemini 429 ("You exceeded your current quota") while testing photo upload — the error path itself worked (loading → error state → retry button), but it displayed the raw Gemini error JSON straight to the user. `lib/gemini.js` and `lib/embeddings.js` now log the full upstream error server-side and throw a clean, specific message instead (a friendly rate-limit notice for 429s, a generic "temporarily unavailable" otherwise) — nothing from the raw API response reaches the client.
+
 ## Not started yet
 
 - Actual photo upload to persistent storage (photos currently stay client-side in `sessionStorage`, sent to the recognition API but not saved anywhere server-side).
