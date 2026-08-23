@@ -26,14 +26,17 @@ alter table recipes enable row level security;
 drop policy if exists "Public read access" on recipes;
 create policy "Public read access" on recipes for select using (true);
 
--- Lets a signed-in user add a recipe Gemini generated for one of their scans
--- (a "Cook me" fallback when nothing in the catalog matched). Scoped
--- to match_type = 'ai-generated' so it can't be used to plant fake official
--- recipes.
+-- Lets any visitor (signed in or not) add a recipe Gemini generated for
+-- their scan (a "Get a recipe" fallback when nothing in the catalog
+-- matched) — scoped to match_type = 'ai-generated' so it can't be used to
+-- plant fake official recipes. Open to anon too: /api/generate-recipe has
+-- no auth check either, so gating just the save on `authenticated` only
+-- broke the flow for signed-out users without actually preventing abuse.
 drop policy if exists "Authenticated users can add AI-generated recipes" on recipes;
-create policy "Authenticated users can add AI-generated recipes"
+drop policy if exists "Anyone can add AI-generated recipes" on recipes;
+create policy "Anyone can add AI-generated recipes"
   on recipes for insert
-  to authenticated
+  to anon, authenticated
   with check (match_type = 'ai-generated');
 
 -- Cosine-similarity search over the recipe catalog. Returns similarity as
