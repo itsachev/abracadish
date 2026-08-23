@@ -17,6 +17,11 @@ function drawScaledToCanvas(canvas, source, sourceWidth, sourceHeight) {
   return canvas.toDataURL("image/jpeg", JPEG_QUALITY);
 }
 
+function isMobileDevice() {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 export default function CameraCapture() {
   const router = useRouter();
   const videoRef = useRef(null);
@@ -74,10 +79,11 @@ export default function CameraCapture() {
 
   async function openCamera() {
     setNotice(null);
-    // Live in-page preview works for both a phone's camera and a laptop's
-    // webcam. If it's unsupported or denied, fall back to the OS-level
-    // camera capture via the hidden file input instead.
-    if (!navigator.mediaDevices?.getUserMedia) {
+    // On phones, go straight to the native camera app (no in-page preview) —
+    // it's the camera UI people already know, with better quality/controls
+    // than an in-browser feed. The live getUserMedia preview is reserved for
+    // desktop, where there's no native camera app to hand off to.
+    if (isMobileDevice() || !navigator.mediaDevices?.getUserMedia) {
       cameraInputRef.current?.click();
       return;
     }
