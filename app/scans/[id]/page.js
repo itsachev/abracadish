@@ -183,6 +183,15 @@ export default function ScanDetailPage() {
         onClick={handleGetRecipe}
         className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
       >
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+          <path
+            d="M12 3.5c1.5 2.2.5 3.5-.3 4.6-.9 1.2-1.2 2.4-.3 3.7 1-.3 1.6-1 1.8-1.8.9 1 1.3 2.3.8 3.7a4 4 0 1 1-6.8-3.9c.7-1 2-2.1 1.8-4.1 1 .3 1.6 1 1.8 1.9.4-1.3.3-2.7-1-4.1.8-.2 1.6-.2 2.2 0Z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         Get a recipe
       </button>
 
@@ -194,6 +203,15 @@ export default function ScanDetailPage() {
         disabled={cooking}
         className="gradient-accent-soft flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-base font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-70"
       >
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+          <path
+            d="M12 3.5c1.5 2.2.5 3.5-.3 4.6-.9 1.2-1.2 2.4-.3 3.7 1-.3 1.6-1 1.8-1.8.9 1 1.3 2.3.8 3.7a4 4 0 1 1-6.8-3.9c.7-1 2-2.1 1.8-4.1 1 .3 1.6 1 1.8 1.9.4-1.3.3-2.7-1-4.1.8-.2 1.6-.2 2.2 0Z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         {cooking ? "Finding a recipe…" : "Cook me"}
       </button>
       {cookError && <p className="mt-2 text-center text-sm text-red-400">{cookError}</p>}
@@ -220,8 +238,17 @@ export default function ScanDetailPage() {
         <button
           type="button"
           onClick={() => setConfirming(true)}
-          className="mt-4 w-full rounded-2xl border border-border py-3 text-sm font-semibold text-red-400 transition-colors hover:border-red-400/40"
+          className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl border border-border py-3 text-sm font-semibold text-red-400 transition-colors hover:border-red-400/40"
         >
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+            <path
+              d="M5 7h14M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7m2 0-.7 12.1A2 2 0 0 1 14.3 21H9.7a2 2 0 0 1-2-1.9L7 7"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
           Delete this scan
         </button>
       )}

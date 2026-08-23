@@ -114,8 +114,20 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={loading}
-          className="gradient-accent glow-accent w-full rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
+          className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
         >
+          {!loading && (
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <circle cx="9" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.7" />
+              <path
+                d="M3.5 19c.7-3.2 3-4.8 5.5-4.8s4.8 1.6 5.5 4.8M18 8v6M15 11h6"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
           {loading ? "Creating account…" : "Create account"}
         </button>
       </form>

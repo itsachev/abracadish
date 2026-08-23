@@ -104,8 +104,17 @@ export default function WelcomeScreen() {
         <button
           type="button"
           onClick={handleDismiss}
-          className="gradient-accent glow-accent mt-4 rounded-2xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+          className="gradient-accent glow-accent mt-4 flex items-center justify-center gap-2 rounded-2xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+            <path
+              d="M12 3.5c1.5 2.2.5 3.5-.3 4.6-.9 1.2-1.2 2.4-.3 3.7 1-.3 1.6-1 1.8-1.8.9 1 1.3 2.3.8 3.7a4 4 0 1 1-6.8-3.9c.7-1 2-2.1 1.8-4.1 1 .3 1.6 1 1.8 1.9.4-1.3.3-2.7-1-4.1.8-.2 1.6-.2 2.2 0Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
           Let&apos;s cook
         </button>
       </div>

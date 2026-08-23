@@ -71,8 +71,17 @@ export default function AccountPage() {
         type="button"
         onClick={handleSignOut}
         disabled={signingOut}
-        className="mt-8 w-full rounded-2xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:border-red-400/40 hover:text-red-400 disabled:opacity-60"
+        className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-2xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:border-red-400/40 hover:text-red-400 disabled:opacity-60"
       >
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+          <path
+            d="M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19H9M16 15l4-3-4-3M9.5 12H20"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         {signingOut ? "Signing out…" : "Sign out"}
       </button>
     </div>

@@ -65,10 +65,15 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
       type="button"
       onClick={handleSave}
       disabled={status === "saving" || status === "saved"}
-      className={`mt-4 w-full rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
+      className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
         status === "saved" ? "bg-emerald-500" : "gradient-accent glow-accent"
       }`}
     >
+      {status !== "saved" && (
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+          <path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      )}
       {status === "saving"
         ? "Saving…"
         : status === "saved"

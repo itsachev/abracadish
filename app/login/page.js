@@ -91,8 +91,13 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="gradient-accent glow-accent w-full rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
+          className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
         >
+          {!loading && (
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
           {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>

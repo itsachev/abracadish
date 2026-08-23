@@ -38,8 +38,16 @@ export default function RecipeRemixBar({ recipe }) {
             type="button"
             onClick={() => handleRemix(constraint)}
             disabled={loadingConstraint !== null}
-            className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-foreground disabled:opacity-50"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3">
+              <path
+                d="M12 4v4M12 16v4M4 12h4M16 12h4M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
             {loadingConstraint === constraint ? "Remixing…" : constraint}
           </button>
         ))}

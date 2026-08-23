@@ -9,7 +9,7 @@
   --foreground: #f6efe7;
   --muted: #b7a99c;
   --accent: #e1713f;
-  --accent-2: #e1713f;
+  --accent-2: #ff5f7e;
   --accent-soft: rgba(225, 113, 63, 0.14);
   --accent-ink: #201007;
 }
@@ -54,7 +54,7 @@ body {
 }
 
 .gradient-accent-soft {
-  background-image: linear-gradient(135deg, rgba(225, 113, 63, 0.28), rgba(242, 168, 125, 0.12));
+  background-image: linear-gradient(135deg, rgba(225, 113, 63, 0.28), rgba(255, 95, 126, 0.14));
 }
 
 .gradient-text {
@@ -65,5 +65,7 @@ body {
 }
 
 .glow-accent {
-  box-shadow: 0 8px 30px -6px rgba(225, 113, 63, 0.45);
+  box-shadow:
+    0 8px 30px -6px rgba(255, 95, 126, 0.4),
+    0 4px 16px -6px rgba(225, 113, 63, 0.4);
 }

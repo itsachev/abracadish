@@ -90,8 +90,12 @@ export default function CookingMode({ recipe }) {
           <button
             type="button"
             onClick={() => setSecondsLeft(step.timerMinutes * 60)}
-            className="mt-6 rounded-full border border-accent/40 bg-accent-soft px-5 py-2.5 font-mono text-sm font-semibold text-accent"
+            className="mt-6 flex items-center gap-2 rounded-full border border-accent/40 bg-accent-soft px-5 py-2.5 font-mono text-sm font-semibold text-accent"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M12 7.5V12l3 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             {secondsLeft === null
               ? `Start Timer (${step.timerMinutes} min)`
               : formatTime(secondsLeft)}
@@ -104,15 +108,27 @@ export default function CookingMode({ recipe }) {
           type="button"
           onClick={goBack}
           disabled={stepIndex === 0}
-          className="flex-1 rounded-2xl border border-border py-3.5 text-base font-semibold text-muted disabled:opacity-40"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl border border-border py-3.5 text-base font-semibold text-muted disabled:opacity-40"
         >
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+            <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           Back
         </button>
         <button
           type="button"
           onClick={goNext}
-          className="gradient-accent glow-accent flex-1 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
+          className="gradient-accent glow-accent flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
+          {isLastStep ? (
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
           {isLastStep ? "Finish" : "Next"}
         </button>
       </div>

@@ -78,8 +78,17 @@ export default function InstallPrompt() {
           <button
             type="button"
             onClick={handleInstall}
-            className="gradient-accent shrink-0 rounded-full px-4 py-2 text-xs font-semibold text-white"
+            className="gradient-accent flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+              <path
+                d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             Install
           </button>
         )}

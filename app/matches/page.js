@@ -84,8 +84,11 @@ export default function MatchesPage() {
           <button
             type="button"
             onClick={() => router.push("/results")}
-            className="gradient-accent rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+            className="gradient-accent flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             Back to results
           </button>
         </div>
