@@ -22,6 +22,7 @@ export default function SignupPage() {
     const { data, error: signUpError } = await getSupabaseClient().auth.signUp({
       email,
       password,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
 
     setLoading(false);

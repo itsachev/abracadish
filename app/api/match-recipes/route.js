@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { embedText } from "@/lib/embeddings";
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { getSupabasePublicClient } from "@/lib/supabasePublicClient";
 import { buildDishQueryText, computeMatchReasons } from "@/lib/recipeMatch";
 
 // Cosine similarity below this is treated as "not actually a match" rather than
@@ -24,7 +24,7 @@ export async function POST(request) {
   try {
     const queryEmbedding = await embedText(buildDishQueryText(dish));
 
-    const supabase = getSupabaseClient();
+    const supabase = getSupabasePublicClient();
     const { data, error } = await supabase.rpc("match_recipes", {
       query_embedding: queryEmbedding,
       match_count: 5,
