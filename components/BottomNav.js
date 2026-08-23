@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuthUser } from "@/lib/useAuthUser";
 
 const TABS = [
   {
@@ -47,6 +48,7 @@ const TABS = [
   {
     href: "/saved",
     label: "Saved",
+    requiresAuth: true,
     icon: (active) => (
       <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
         <path
@@ -61,6 +63,7 @@ const TABS = [
   {
     href: "/progress",
     label: "Progress",
+    requiresAuth: true,
     icon: (active) => (
       <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
         <path
@@ -77,6 +80,8 @@ const TABS = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const user = useAuthUser();
+  const tabs = TABS.filter((tab) => !tab.requiresAuth || user);
 
   return (
     <nav
@@ -84,7 +89,7 @@ export default function BottomNav() {
                  pb-[env(safe-area-inset-bottom)]"
     >
       <ul className="mx-auto flex h-16 max-w-md items-stretch justify-around">
-        {TABS.map((tab) => {
+        {tabs.map((tab) => {
           const active =
             tab.href === "/"
               ? pathname === "/"

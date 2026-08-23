@@ -91,7 +91,7 @@ export default function SavedPage() {
         </div>
       )}
 
-      <h2 className="mt-10 text-lg font-bold tracking-tight text-foreground">Scan history</h2>
+      <h2 className="font-display mt-10 text-lg font-normal tracking-tight text-foreground">Scan history</h2>
 
       {user === null && (
         <div className="mt-4 rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">

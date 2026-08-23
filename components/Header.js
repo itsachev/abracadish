@@ -1,27 +1,80 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/lib/useAuthUser";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export default function Header() {
   const user = useAuthUser();
+  const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
+  async function handleSignOut() {
+    setMenuOpen(false);
+    await getSupabaseClient().auth.signOut();
+    router.push("/");
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-md items-center justify-between px-5">
-        <Link href="/" className="text-sm font-bold tracking-tight text-foreground">
-          Abracadish
+        <Link href="/" className="font-display text-3xl font-normal tracking-tight">
+          <span className="text-foreground">Abraca</span>
+          <span className="text-accent italic">Dish</span>
         </Link>
 
         {user === undefined ? (
           <div className="h-7 w-16" />
         ) : user ? (
-          <Link
-            href="/account"
-            className="max-w-36 truncate text-xs font-medium text-muted hover:text-foreground"
-          >
-            {user.email}
-          </Link>
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Open menu"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:text-foreground"
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
+                <path
+                  d="M4 7h16M4 12h16M4 17h16"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 top-11 z-50 w-40 overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
+                <Link
+                  href="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2.5 text-right text-sm text-foreground/90 hover:bg-surface-hover"
+                >
+                  Account
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="block w-full px-4 py-2.5 text-right text-sm text-red-400 hover:bg-surface-hover"
+                >
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-xs font-medium text-muted hover:text-foreground">
