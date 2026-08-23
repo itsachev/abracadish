@@ -155,13 +155,9 @@ export default function AuthDebug() {
     // localStorage and reportedly had the same symptom, so this is the key
     // test.
     let localStorageResult;
-    let sbLocalStorageKeys = [];
     try {
       window.localStorage.setItem("authdebug_ls", "1");
       localStorageResult = window.localStorage.getItem("authdebug_ls") === "1" ? "WORKS" : "FAILED (set didn't throw, but not readable back)";
-      // The actual key the original (pre-cookie-migration) auth client
-      // stores its session under, e.g. "sb-<project-ref>-auth-token".
-      sbLocalStorageKeys = Object.keys(window.localStorage).filter((k) => k.startsWith("sb-"));
     } catch (err) {
       localStorageResult = `threw: ${err.message}`;
     }
@@ -223,7 +219,6 @@ export default function AuthDebug() {
       cookieDescriptorNative,
       cookieStoreResult,
       localStorageResult,
-      sbLocalStorageKeys,
       displayMode,
       windowIdentity,
       serverSeenCookies,
@@ -267,9 +262,6 @@ export default function AuthDebug() {
       <div>document.cookie is native (untampered): {info.cookieDescriptorNative}</div>
       <div>cookieStore API test: {info.cookieStoreResult}</div>
       <div>localStorage test: {info.localStorageResult}</div>
-      <div className="font-bold">
-        sb-* localStorage keys: {info.sbLocalStorageKeys.length === 0 ? "NONE" : info.sbLocalStorageKeys.join(", ")}
-      </div>
       {info.cookieWriteError && <div className="text-red-400">cookie write threw: {info.cookieWriteError}</div>}
       <div>probe (with attributes): {info.probeWorks ? "WORKS" : "FAILED"}</div>
       <div>bare probe (no attributes): {info.bareWorks ? "WORKS" : "FAILED"}</div>

@@ -2,15 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/lib/useAuthUser";
-import { getSupabaseClient } from "@/lib/supabaseClient";
 
-// TEMPORARY: reverted to the original client-side auth call — see
-// app/login/page.js for why.
 export default function Header() {
   const user = useAuthUser();
-  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -27,8 +22,10 @@ export default function Header() {
 
   async function handleSignOut() {
     setMenuOpen(false);
-    await getSupabaseClient().auth.signOut();
-    router.push("/");
+    await fetch("/api/auth/logout", { method: "POST" });
+    // Hard navigation, not router.push — see login/page.js for why.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.href = "/";
   }
 
   return (
