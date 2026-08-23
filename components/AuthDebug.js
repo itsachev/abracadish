@@ -98,15 +98,26 @@ export default function AuthDebug() {
   }, []);
 
   async function check() {
-    // Ground-truth test: can this browser write+read a cookie via JS at
-    // all, independent of Supabase's own cookie logic?
-    const probeName = "authdebug_probe";
-    document.cookie = `${probeName}=1; path=/; max-age=60; SameSite=Lax`;
-    const probeWorks = document.cookie
+    // Ground-truth tests: can this browser write+read a cookie via JS at
+    // all, independent of Supabase's own cookie logic? Two variants (with
+    // attributes, and completely bare) to isolate whether one specific
+    // attribute (path/max-age/SameSite) is what's being rejected.
+    let cookieWriteError = null;
+    try {
+      document.cookie = "authdebug_probe=1; path=/; max-age=60; SameSite=Lax";
+      document.cookie = "authdebug_bare=1";
+    } catch (err) {
+      cookieWriteError = err.message;
+    }
+    const rawCookieString = document.cookie;
+    const probeWorks = rawCookieString
       .split(";")
-      .some((c) => c.trim().startsWith(`${probeName}=`));
+      .some((c) => c.trim().startsWith("authdebug_probe="));
+    const bareWorks = rawCookieString
+      .split(";")
+      .some((c) => c.trim().startsWith("authdebug_bare="));
 
-    const cookieNames = document.cookie
+    const cookieNames = rawCookieString
       .split(";")
       .map((c) => c.trim().split("=")[0])
       .filter((name) => name.startsWith("sb-"));
@@ -126,7 +137,11 @@ export default function AuthDebug() {
 
     setInfo({
       time: new Date().toLocaleTimeString(),
+      cookieEnabled: navigator.cookieEnabled,
+      cookieWriteError,
       probeWorks,
+      bareWorks,
+      rawCookieString: rawCookieString || "(empty)",
       cookieNames,
       hasSession: !!session,
       email: session?.user?.email ?? null,
@@ -155,7 +170,11 @@ export default function AuthDebug() {
         </button>
       </div>
       <div>checked: {info.time} ({info.elapsedMs}ms)</div>
-      <div>raw cookie write/read test: {info.probeWorks ? "WORKS" : "FAILED"}</div>
+      <div>navigator.cookieEnabled: {String(info.cookieEnabled)}</div>
+      {info.cookieWriteError && <div className="text-red-400">cookie write threw: {info.cookieWriteError}</div>}
+      <div>probe (with attributes): {info.probeWorks ? "WORKS" : "FAILED"}</div>
+      <div>bare probe (no attributes): {info.bareWorks ? "WORKS" : "FAILED"}</div>
+      <div className="break-all">raw document.cookie: {info.rawCookieString}</div>
       <div>sb-* cookies found: {info.cookieNames.length === 0 ? "NONE" : info.cookieNames.join(", ")}</div>
       <div>session: {info.hasSession ? `YES (${info.email})` : "NO"}</div>
       {info.expiresAt && <div>token expires: {info.expiresAt}</div>}
