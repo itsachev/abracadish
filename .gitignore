@@ -47,3 +47,5 @@ certificates
 /app_idea.md
 /progress.md
 /CLAUDE.md
+.vercel
+.env*
