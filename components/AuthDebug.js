@@ -185,6 +185,20 @@ export default function AuthDebug() {
       documentURL: document.URL,
     };
 
+    // Asks the SERVER what it actually saw in the incoming Cookie header —
+    // independent of this device's client-side document.cookie read, which
+    // has been shown to fail. If the server sees the sb-* cookie while the
+    // client-side reads above show none, the cookie is really there and
+    // only this device's JS read is broken.
+    let serverSeenCookies = "n/a";
+    try {
+      const res = await fetch("/api/debug/cookies", { cache: "no-store" });
+      const json = await res.json();
+      serverSeenCookies = json.cookieNames.length === 0 ? "NONE" : json.cookieNames.join(", ");
+    } catch (err) {
+      serverSeenCookies = `fetch failed: ${err.message}`;
+    }
+
     const supabase = getSupabaseClient();
     const startedAt = Date.now();
     let session = null;
@@ -207,6 +221,7 @@ export default function AuthDebug() {
       localStorageResult,
       displayMode,
       windowIdentity,
+      serverSeenCookies,
       probeWorks,
       bareWorks,
       rawCookieString: rawCookieString || "(empty)",
@@ -251,7 +266,8 @@ export default function AuthDebug() {
       <div>probe (with attributes): {info.probeWorks ? "WORKS" : "FAILED"}</div>
       <div>bare probe (no attributes): {info.bareWorks ? "WORKS" : "FAILED"}</div>
       <div className="break-all">raw document.cookie: {info.rawCookieString}</div>
-      <div>sb-* cookies found: {info.cookieNames.length === 0 ? "NONE" : info.cookieNames.join(", ")}</div>
+      <div>sb-* cookies found (client-side): {info.cookieNames.length === 0 ? "NONE" : info.cookieNames.join(", ")}</div>
+      <div className="font-bold">cookies server actually received: {info.serverSeenCookies}</div>
       <div>session: {info.hasSession ? `YES (${info.email})` : "NO"}</div>
       {info.expiresAt && <div>token expires: {info.expiresAt}</div>}
       {info.error && <div className="text-red-400">getSession error: {info.error}</div>}
