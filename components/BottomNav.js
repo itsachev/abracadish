@@ -70,7 +70,10 @@ export default function BottomNav() {
     >
       <ul className="mx-auto flex h-16 max-w-md items-stretch justify-around">
         {TABS.map((tab) => {
-          const active = tab.href === "/" ? pathname === "/" : pathname?.startsWith(tab.href);
+          const active =
+            tab.href === "/"
+              ? pathname === "/"
+              : pathname === tab.href || pathname?.startsWith(`${tab.href}/`);
           return (
             <li key={tab.href} className="flex-1">
               <Link

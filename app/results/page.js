@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import LocationPrompt from "@/components/LocationPrompt";
 import SaveScanButton from "@/components/SaveScanButton";
+import { getOrGenerateRecipeIdForDish } from "@/lib/cookScan";
 
 const PHOTO_KEY = "abracadish:lastPhoto";
 
@@ -34,6 +35,8 @@ export default function ResultsPage() {
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
   const [restaurantName, setRestaurantName] = useState("");
+  const [cooking, setCooking] = useState(false);
+  const [cookError, setCookError] = useState(null);
 
   useEffect(() => {
     if (!photo) {
@@ -69,6 +72,18 @@ export default function ResultsPage() {
       cancelled = true;
     };
   }, [photo]);
+
+  async function handleCook() {
+    setCooking(true);
+    setCookError(null);
+    try {
+      const recipeId = await getOrGenerateRecipeIdForDish({ ...dish, answers });
+      router.push(`/recipe/${recipeId}`);
+    } catch (err) {
+      setCooking(false);
+      setCookError(err.message || "Couldn't generate a recipe.");
+    }
+  }
 
   if (!photo) return null;
 
@@ -300,6 +315,18 @@ export default function ResultsPage() {
               </div>
             </section>
           )}
+
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={handleCook}
+              disabled={cooking}
+              className="gradient-accent glow-accent w-full rounded-2xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+            >
+              {cooking ? "Finding a recipe…" : "Get a recipe"}
+            </button>
+            {cookError && <p className="mt-2 text-center text-sm text-red-400">{cookError}</p>}
+          </div>
 
           <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
 

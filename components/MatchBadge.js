@@ -10,7 +10,7 @@ const STYLES = {
 export default function MatchBadge({ matchType }) {
   return (
     <span
-      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${
+      className={`inline-block rounded-full py-2 px-4 text-xs font-medium ${
         STYLES[matchType] ?? STYLES["ai-generated"]
       }`}
     >

@@ -178,7 +178,7 @@ export default function ScanDetailPage() {
         disabled={cooking}
         className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70"
       >
-        {cooking ? "Finding a recipe…" : "Cook this dish"}
+        {cooking ? "Finding a recipe…" : "Cook me"}
       </button>
       {cookError && <p className="mt-2 text-center text-sm text-red-400">{cookError}</p>}
 

@@ -27,7 +27,7 @@ drop policy if exists "Public read access" on recipes;
 create policy "Public read access" on recipes for select using (true);
 
 -- Lets a signed-in user add a recipe Gemini generated for one of their scans
--- (a "Cook this dish" fallback when nothing in the catalog matched). Scoped
+-- (a "Cook me" fallback when nothing in the catalog matched). Scoped
 -- to match_type = 'ai-generated' so it can't be used to plant fake official
 -- recipes.
 drop policy if exists "Authenticated users can add AI-generated recipes" on recipes;

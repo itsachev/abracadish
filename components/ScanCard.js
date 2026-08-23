@@ -149,7 +149,7 @@ export default function ScanCard({ scan, onDelete }) {
               strokeLinejoin="round"
             />
           </svg>
-          {cooking ? "Finding a recipe…" : "Cook this dish"}
+          {cooking ? "Finding a recipe…" : "Cook me"}
         </button>
         {cookError && <p className="mt-1.5 text-center text-xs text-red-400">{cookError}</p>}
       </div>

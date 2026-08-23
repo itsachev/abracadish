@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import MatchBadge from "@/components/MatchBadge";
 import SaveButton from "@/components/SaveButton";
+import RecipeRemixBar from "@/components/RecipeRemixBar";
 import { getRecipeById } from "@/lib/recipes";
 
 export default async function RecipePage({ params, searchParams }) {
@@ -32,8 +33,21 @@ export default async function RecipePage({ params, searchParams }) {
         )}
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-4 mb-10 flex items-center gap-2">
         <MatchBadge matchType={recipe.matchType} />
+        {recipe.source?.remixOf && (
+          <span className="rounded-full bg-white/8 py-2 px-4 text-xs text-muted">
+            Remixed: {recipe.source.remixLabel}
+            {recipe.source.remixOfTitle ? (
+              <>
+                {" · from "}
+                <Link href={`/recipe/${recipe.source.remixOf}`} className="text-accent underline">
+                  {recipe.source.remixOfTitle}
+                </Link>
+              </>
+            ) : null}
+          </span>
+        )}
       </div>
 
       {matchReasons.length > 0 && (
@@ -68,6 +82,8 @@ export default async function RecipePage({ params, searchParams }) {
           ))}
         </ul>
       </section>
+
+      <RecipeRemixBar recipe={recipe} />
 
       <section className="mt-6 text-xs text-muted">
         <p>
