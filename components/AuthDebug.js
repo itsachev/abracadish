@@ -122,6 +122,46 @@ export default function AuthDebug() {
       .map((c) => c.trim().split("=")[0])
       .filter((name) => name.startsWith("sb-"));
 
+    // Is document.cookie itself the browser's real implementation, or has
+    // something (an injected script, an extension) replaced the getter/
+    // setter to silently no-op it? Native implementations stringify to
+    // "function cookie() { [native code] }".
+    let cookieDescriptorNative = "n/a";
+    try {
+      const descriptor = Object.getOwnPropertyDescriptor(Document.prototype, "cookie");
+      cookieDescriptorNative = descriptor?.set?.toString().includes("[native code]") ? "yes" : "NO (overridden!)";
+    } catch (err) {
+      cookieDescriptorNative = `error: ${err.message}`;
+    }
+
+    // Independent write path via the newer promise-based Cookie Store API
+    // (where supported) — cross-checks document.cookie against a totally
+    // separate browser mechanism.
+    let cookieStoreResult = "unsupported";
+    if (window.cookieStore) {
+      try {
+        await window.cookieStore.set({ name: "authdebug_store", value: "1", path: "/" });
+        const got = await window.cookieStore.get("authdebug_store");
+        cookieStoreResult = got ? "WORKS" : "FAILED (set didn't throw, but not readable back)";
+      } catch (err) {
+        cookieStoreResult = `threw: ${err.message}`;
+      }
+    }
+
+    // localStorage is a completely different storage mechanism (no
+    // Set-Cookie/document.cookie machinery at all) — this confirms whether
+    // ALL persistent site storage is blocked here, or just cookies
+    // specifically. The original (pre-migration) auth also used
+    // localStorage and reportedly had the same symptom, so this is the key
+    // test.
+    let localStorageResult;
+    try {
+      window.localStorage.setItem("authdebug_ls", "1");
+      localStorageResult = window.localStorage.getItem("authdebug_ls") === "1" ? "WORKS" : "FAILED (set didn't throw, but not readable back)";
+    } catch (err) {
+      localStorageResult = `threw: ${err.message}`;
+    }
+
     const supabase = getSupabaseClient();
     const startedAt = Date.now();
     let session = null;
@@ -139,6 +179,9 @@ export default function AuthDebug() {
       time: new Date().toLocaleTimeString(),
       cookieEnabled: navigator.cookieEnabled,
       cookieWriteError,
+      cookieDescriptorNative,
+      cookieStoreResult,
+      localStorageResult,
       probeWorks,
       bareWorks,
       rawCookieString: rawCookieString || "(empty)",
@@ -171,6 +214,9 @@ export default function AuthDebug() {
       </div>
       <div>checked: {info.time} ({info.elapsedMs}ms)</div>
       <div>navigator.cookieEnabled: {String(info.cookieEnabled)}</div>
+      <div>document.cookie is native (untampered): {info.cookieDescriptorNative}</div>
+      <div>cookieStore API test: {info.cookieStoreResult}</div>
+      <div>localStorage test: {info.localStorageResult}</div>
       {info.cookieWriteError && <div className="text-red-400">cookie write threw: {info.cookieWriteError}</div>}
       <div>probe (with attributes): {info.probeWorks ? "WORKS" : "FAILED"}</div>
       <div>bare probe (no attributes): {info.bareWorks ? "WORKS" : "FAILED"}</div>
