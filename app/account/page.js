@@ -2,18 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/lib/useAuthUser";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
+// TEMPORARY: reverted to the original client-side auth call — see
+// app/login/page.js for why.
 export default function AccountPage() {
+  const router = useRouter();
   const user = useAuthUser();
   const [signingOut, setSigningOut] = useState(false);
 
   async function handleSignOut() {
     setSigningOut(true);
-    await fetch("/api/auth/logout", { method: "POST" });
-    // Hard navigation, not router.push — see login/page.js for why.
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.href = "/";
+    await getSupabaseClient().auth.signOut();
+    router.push("/");
   }
 
   if (user === undefined) {

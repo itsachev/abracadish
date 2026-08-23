@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
+// TEMPORARY: reverted to the original client-side, localStorage-based auth
+// call (pre-cookie-migration) — see login/page.js for why.
 export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,26 +21,19 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
 
-    // Signs up server-side so any session returned immediately (email
-    // confirmation off) arrives via Set-Cookie instead of a client-side
-    // document.cookie write — see /api/auth/login for why.
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const { data, error: signUpError } = await getSupabaseClient().auth.signUp({
+      email,
+      password,
     });
-    const resBody = await res.json().catch(() => null);
 
     setLoading(false);
-    if (!res.ok) {
-      setError(resBody?.error ?? "Couldn't create your account. Please try again.");
+    if (signUpError) {
+      setError(signUpError.message);
       return;
     }
 
-    if (resBody?.hasSession) {
-      // Hard navigation, not router.push — see login/page.js for why.
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.href = "/";
+    if (data.session) {
+      router.push("/");
       return;
     }
     setCheckEmail(true);
