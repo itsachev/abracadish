@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import LocationPrompt from "@/components/LocationPrompt";
 import SaveScanButton from "@/components/SaveScanButton";
 import RoastButton from "@/components/RoastButton";
-import { getOrGenerateRecipeIdForDish } from "@/lib/cookScan";
+import { storeDish } from "@/lib/dishStorage";
 import { getPhoto } from "@/lib/photoStorage";
 
 function subscribeNoop() {
@@ -31,8 +31,6 @@ export default function ResultsPage() {
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
   const [restaurantName, setRestaurantName] = useState("");
-  const [cooking, setCooking] = useState(false);
-  const [cookError, setCookError] = useState(null);
 
   useEffect(() => {
     if (!photo) {
@@ -69,16 +67,9 @@ export default function ResultsPage() {
     };
   }, [photo]);
 
-  async function handleCook() {
-    setCooking(true);
-    setCookError(null);
-    try {
-      const recipeId = await getOrGenerateRecipeIdForDish({ ...dish, answers });
-      router.push(`/recipe/${recipeId}`);
-    } catch (err) {
-      setCooking(false);
-      setCookError(err.message || "Couldn't generate a recipe.");
-    }
+  function handleCook() {
+    storeDish({ ...dish, answers });
+    router.push("/matches");
   }
 
   if (!photo) return null;
@@ -286,10 +277,10 @@ export default function ResultsPage() {
               <h2 className="text-sm font-semibold text-foreground">
                 A couple quick questions
               </h2>
-              <p className="text-xs text-muted">Helps us pin down the dish more precisely.</p>
+              <p className="text-xs text-muted mb-4">Helps us pin down the dish more precisely.</p>
               <div className="mt-3 space-y-4">
                 {dish.clarifyingQuestions.map((q) => (
-                  <div key={q.id}>
+                  <div key={q.id} className="mt-5">
                     <p className="text-sm text-foreground/90">{q.question}</p>
                     <div className="mt-2 flex gap-2">
                       {q.options.map((option) => (
@@ -317,12 +308,10 @@ export default function ResultsPage() {
             <button
               type="button"
               onClick={handleCook}
-              disabled={cooking}
-              className="gradient-accent glow-accent w-full rounded-2xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+              className="gradient-accent glow-accent w-full rounded-2xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
             >
-              {cooking ? "Finding a recipe…" : "Get a recipe"}
+              Get a recipe
             </button>
-            {cookError && <p className="mt-2 text-center text-sm text-red-400">{cookError}</p>}
           </div>
 
           <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
