@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import Header from "@/components/Header";
+import InstallPrompt from "@/components/InstallPrompt";
 import WelcomeScreen from "@/components/WelcomeScreen";
 
 const FULL_BLEED_PREFIXES = ["/scan", "/cook"];
@@ -21,6 +22,7 @@ export default function AppChrome({ children }) {
   return (
     <>
       {!fullBleed && <Header />}
+      {!fullBleed && <InstallPrompt />}
       <main className={fullBleed ? "flex-1" : "flex-1 pb-20"}>{children}</main>
       {!fullBleed && <BottomNav />}
       <WelcomeScreen />
