@@ -69,7 +69,7 @@ export default function SavedPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-6">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Saved recipes</h1>
+      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Saved recipes</h1>
 
       {!loadingRecipes && recipes.length === 0 && (
         <div className="mt-6 flex flex-col items-center gap-3 text-center">

@@ -118,7 +118,7 @@ export default function ScanDetailPage() {
       )}
 
       <div className={`flex items-center justify-between ${scan.imageUrl ? "mt-6" : ""}`}>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">{scan.dishName}</h1>
+        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{scan.dishName}</h1>
         {typeof scan.confidence === "number" && (
           <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
             {Math.round(scan.confidence * 100)}% confidence

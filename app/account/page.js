@@ -41,7 +41,7 @@ export default function AccountPage() {
   return (
     <div className="mx-auto max-w-md px-5 pt-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Account</h1>
+        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Account</h1>
         <Link
           href="/scan"
           className="gradient-accent flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-white"

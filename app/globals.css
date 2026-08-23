@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08080a;
-  --background-elevated: #0f0f13;
-  --surface: rgba(255, 255, 255, 0.045);
-  --surface-hover: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.09);
-  --foreground: #f5f5f7;
-  --muted: #8d8d97;
-  --accent: #ff7a45;
-  --accent-2: #ff3d6e;
-  --accent-soft: rgba(255, 122, 69, 0.14);
+  --background: #14100e;
+  --background-elevated: #1d1714;
+  --surface: #1d1714;
+  --surface-hover: #262019;
+  --border: rgba(255, 240, 230, 0.08);
+  --foreground: #f6efe7;
+  --muted: #b7a99c;
+  --accent: #e1713f;
+  --accent-2: #e1713f;
+  --accent-soft: rgba(225, 113, 63, 0.14);
+  --accent-ink: #201007;
 }
 
 @theme inline {
@@ -24,7 +25,8 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-soft: var(--accent-soft);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-instrument-serif);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -39,12 +41,12 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
 }
 
 ::selection {
   background: var(--accent);
-  color: #100905;
+  color: var(--accent-ink);
 }
 
 .gradient-accent {
@@ -52,12 +54,12 @@ body {
 }
 
 .gradient-text {
-  background-image: linear-gradient(135deg, #ffb787, var(--accent-2));
+  background-image: linear-gradient(135deg, #f2a87d, var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .glow-accent {
-  box-shadow: 0 8px 30px -6px rgba(255, 61, 110, 0.45);
+  box-shadow: 0 8px 30px -6px rgba(225, 113, 63, 0.45);
 }

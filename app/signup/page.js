@@ -42,7 +42,7 @@ export default function SignupPage() {
   if (checkEmail) {
     return (
       <div className="mx-auto max-w-md px-5 pt-10 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Check your email</h1>
+        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Check your email</h1>
         <p className="mt-2 text-sm text-muted">
           We sent a confirmation link to <span className="text-foreground">{email}</span>. Click
           it to finish creating your account.
@@ -53,7 +53,7 @@ export default function SignupPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Create an account</h1>
+      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Create an account</h1>
       <p className="mt-1 text-sm text-muted">Save your scan history and revisit it anytime.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-3">

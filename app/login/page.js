@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Sign in</h1>
+      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Sign in</h1>
       <p className="mt-1 text-sm text-muted">Sign in to save and revisit your scan history.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-3">

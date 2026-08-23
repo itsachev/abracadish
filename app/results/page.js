@@ -135,7 +135,7 @@ export default function ResultsPage() {
       {dish && isNotADish(dish) && (
         <div className="mt-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">{dish.name}</h1>
+            <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{dish.name}</h1>
             <span className="rounded-full bg-white/8 px-2.5 py-1 text-xs font-semibold text-muted">
               {Math.round(dish.confidence * 100)}% confidence
             </span>
@@ -157,7 +157,7 @@ export default function ResultsPage() {
         <>
           <div className="mt-6">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">{dish.name}</h1>
+              <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{dish.name}</h1>
               <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
                 {Math.round(dish.confidence * 100)}% confidence
               </span>

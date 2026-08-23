@@ -20,7 +20,7 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight">
+        <h1 className="font-display text-5xl font-normal leading-[1.1] tracking-tight">
           Snap it. Identify it.
           <br />
           <span className="gradient-text">Find the recipe.</span>

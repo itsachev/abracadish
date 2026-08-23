@@ -18,7 +18,7 @@ export default async function RecipePage({ params, searchParams }) {
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{recipe.title}</h1>
+          <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{recipe.title}</h1>
           <p className="mt-1 text-sm text-muted">
             {recipe.cuisine} · {recipe.protein} · Serves {recipe.servings}
           </p>
