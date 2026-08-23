@@ -53,6 +53,10 @@ body {
   background-image: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 
+.gradient-accent-soft {
+  background-image: linear-gradient(135deg, rgba(225, 113, 63, 0.28), rgba(242, 168, 125, 0.12));
+}
+
 .gradient-text {
   background-image: linear-gradient(135deg, #f2a87d, var(--accent-2));
   -webkit-background-clip: text;

@@ -111,8 +111,12 @@ export default async function RecipePage({ params, searchParams }) {
 
       <Link
         href="/scan"
-        className="mt-4 block text-center text-sm font-medium text-muted underline-offset-4 hover:text-foreground hover:underline"
+        className="gradient-accent-soft mt-3 flex items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
       >
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+          <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="2" />
+          <circle cx="12" cy="13" r="3.4" stroke="currentColor" strokeWidth="2" />
+        </svg>
         Scan another dish
       </Link>
     </div>
