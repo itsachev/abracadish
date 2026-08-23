@@ -42,3 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 certificates
+
+# internal planning notes, not for the public repo
+/app_idea.md
+/progress.md
