@@ -43,13 +43,17 @@ export default function AuthDebug() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: this is a diagnostic panel that must reflect state as of mount/auth-events, not derive it
     check();
+    const supabase = getSupabaseClient();
+    const { data: listener } = supabase.auth.onAuthStateChange(() => check());
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   if (!info) return null;
 
   return (
-    <div className="fixed bottom-20 left-2 right-2 z-[999] rounded-xl border border-yellow-500/50 bg-black/90 p-3 font-mono text-[10px] leading-relaxed text-yellow-300 backdrop-blur-sm">
+    <div className="fixed bottom-20 left-2 right-2 z-999 rounded-xl border border-yellow-500/50 bg-black/90 p-3 font-mono text-[10px] leading-relaxed text-yellow-300 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <span className="font-bold">AUTH DEBUG</span>
         <button type="button" onClick={check} className="rounded bg-yellow-500/20 px-2 py-0.5 text-yellow-200">
