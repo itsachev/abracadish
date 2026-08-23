@@ -4,16 +4,12 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import LocationPrompt from "@/components/LocationPrompt";
 import SaveScanButton from "@/components/SaveScanButton";
+import RoastButton from "@/components/RoastButton";
 import { getOrGenerateRecipeIdForDish } from "@/lib/cookScan";
-
-const PHOTO_KEY = "abracadish:lastPhoto";
+import { getPhoto } from "@/lib/photoStorage";
 
 function subscribeNoop() {
   return () => {};
-}
-
-function getPhotoSnapshot() {
-  return sessionStorage.getItem(PHOTO_KEY);
 }
 
 function getPhotoServerSnapshot() {
@@ -27,10 +23,10 @@ function isNotADish(dish) {
 export default function ResultsPage() {
   const router = useRouter();
   // useSyncExternalStore (not a useState lazy initializer) so the server
-  // render and the client's first render both see null — reading
-  // sessionStorage directly in an initializer would let the client's first
-  // pass see the real value already, causing a hydration mismatch.
-  const photo = useSyncExternalStore(subscribeNoop, getPhotoSnapshot, getPhotoServerSnapshot);
+  // render and the client's first render both see null — reading the
+  // in-memory photo directly in an initializer would let the client's
+  // first pass see the real value already, causing a hydration mismatch.
+  const photo = useSyncExternalStore(subscribeNoop, getPhoto, getPhotoServerSnapshot);
   const [dish, setDish] = useState(null);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -165,6 +161,7 @@ export default function ResultsPage() {
             <p className="mt-1 text-sm text-muted">
               {[dish.classification, dish.cuisine, dish.region].filter(Boolean).join(" · ")}
             </p>
+            <RoastButton photo={photo} dishName={dish.name} />
           </div>
 
           {(() => {
