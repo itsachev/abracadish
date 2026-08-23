@@ -1,8 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthUser } from "@/lib/useAuthUser";
+import { subscribeToShoppingListAdditions } from "@/lib/shoppingList";
+
+const HIGHLIGHT_MS = 3000;
 
 const TABS = [
   {
@@ -61,6 +65,26 @@ const TABS = [
     ),
   },
   {
+    href: "/shopping-list",
+    label: "List",
+    icon: (active) => (
+      <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+        <path
+          d="M6 8h12l-1 11a2 2 0 0 1-2 1.8H9a2 2 0 0 1-2-1.8L6 8Z"
+          stroke="currentColor"
+          strokeWidth={active ? 2.2 : 1.8}
+          strokeLinejoin="round"
+        />
+        <path
+          d="M9 8V6a3 3 0 0 1 6 0v2"
+          stroke="currentColor"
+          strokeWidth={active ? 2.2 : 1.8}
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
     href: "/progress",
     label: "Progress",
     requiresAuth: true,
@@ -82,6 +106,20 @@ export default function BottomNav() {
   const pathname = usePathname();
   const user = useAuthUser();
   const tabs = TABS.filter((tab) => !tab.requiresAuth || user);
+  const [justAddedToList, setJustAddedToList] = useState(false);
+  const highlightTimer = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToShoppingListAdditions(() => {
+      setJustAddedToList(true);
+      clearTimeout(highlightTimer.current);
+      highlightTimer.current = setTimeout(() => setJustAddedToList(false), HIGHLIGHT_MS);
+    });
+    return () => {
+      unsubscribe();
+      clearTimeout(highlightTimer.current);
+    };
+  }, []);
 
   return (
     <nav
@@ -94,18 +132,19 @@ export default function BottomNav() {
             tab.href === "/"
               ? pathname === "/"
               : pathname === tab.href || pathname?.startsWith(`${tab.href}/`);
+          const highlighted = tab.href === "/shopping-list" && justAddedToList;
           return (
             <li key={tab.href} className="flex-1">
               <Link
                 href={tab.href}
                 className={`relative flex h-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
-                  active ? "text-white" : "text-muted"
+                  highlighted ? "animate-blink-accent" : active ? "text-white" : "text-muted"
                 }`}
               >
                 {active && (
                   <span className="gradient-accent absolute -top-px h-0.5 w-8 rounded-full" />
                 )}
-                <span className={active ? "text-accent" : ""}>{tab.icon(active)}</span>
+                <span className={highlighted ? "" : active ? "text-accent" : ""}>{tab.icon(active)}</span>
                 {tab.label}
               </Link>
             </li>

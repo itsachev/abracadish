@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import MatchBadge from "@/components/MatchBadge";
 import SaveButton from "@/components/SaveButton";
+import AddToShoppingListButton from "@/components/AddToShoppingListButton";
 import RecipeRemixBar from "@/components/RecipeRemixBar";
 import { getRecipeById } from "@/lib/recipes";
 
@@ -81,6 +82,7 @@ export default async function RecipePage({ params, searchParams }) {
             </li>
           ))}
         </ul>
+        <AddToShoppingListButton recipe={recipe} className="mt-3" />
       </section>
 
       <RecipeRemixBar recipe={recipe} />
