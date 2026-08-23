@@ -147,10 +147,14 @@ export default function AuthDebug() {
   if (!info) return null;
 
   return (
-    <div className="fixed bottom-20 left-2 right-2 z-999 max-h-[55vh] overflow-y-auto rounded-xl border border-yellow-500/50 bg-black/90 p-3 font-mono text-[20px] leading-relaxed text-yellow-300 backdrop-blur-sm">
+    <div className="pointer-events-none fixed bottom-20 left-2 right-2 z-999 max-h-[55vh] overflow-y-auto rounded-xl border border-yellow-500/50 bg-black/90 p-3 font-mono text-[11px] leading-relaxed text-yellow-300 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <span className="font-bold">AUTH DEBUG</span>
-        <button type="button" onClick={check} className="rounded bg-yellow-500/20 px-2 py-0.5 text-yellow-200">
+        <button
+          type="button"
+          onClick={check}
+          className="pointer-events-auto rounded bg-yellow-500/20 px-2 py-0.5 text-yellow-200"
+        >
           recheck
         </button>
       </div>
