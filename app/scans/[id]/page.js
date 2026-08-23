@@ -5,7 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthUser } from "@/lib/useAuthUser";
 import { getScanById, deleteScan } from "@/lib/scans";
-import { getOrGenerateRecipeIdForScan } from "@/lib/cookScan";
+import { getOrGenerateRecipeIdForScan, scanToDish } from "@/lib/cookScan";
+import { storeDish } from "@/lib/dishStorage";
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   month: "long",
@@ -66,6 +67,11 @@ export default function ScanDetailPage() {
       setCooking(false);
       setCookError(error.message || "Couldn't generate a recipe.");
     }
+  }
+
+  function handleGetRecipe() {
+    storeDish(scanToDish(scan));
+    router.push("/matches");
   }
 
   if (user === undefined) {
@@ -174,9 +180,19 @@ export default function ScanDetailPage() {
 
       <button
         type="button"
+        onClick={handleGetRecipe}
+        className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
+      >
+        Get a recipe
+      </button>
+
+      <p className="my-3 text-center text-xs font-semibold uppercase tracking-wide text-muted">OR</p>
+
+      <button
+        type="button"
         onClick={handleCook}
         disabled={cooking}
-        className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70"
+        className="gradient-accent-soft flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-base font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-70"
       >
         {cooking ? "Finding a recipe…" : "Cook me"}
       </button>

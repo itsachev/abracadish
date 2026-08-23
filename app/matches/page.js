@@ -151,8 +151,17 @@ export default function MatchesPage() {
             type="button"
             onClick={handleGenerateInstead}
             disabled={generating}
-            className="mt-4 w-full text-center text-sm font-medium text-muted underline-offset-4 hover:text-foreground hover:underline disabled:opacity-60"
+            className="gradient-accent-soft mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-60"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path
+                d="M12 3.5c1.5 2.2.5 3.5-.3 4.6-.9 1.2-1.2 2.4-.3 3.7 1-.3 1.6-1 1.8-1.8.9 1 1.3 2.3.8 3.7a4 4 0 1 1-6.8-3.9c.7-1 2-2.1 1.8-4.1 1 .3 1.6 1 1.8 1.9.4-1.3.3-2.7-1-4.1.8-.2 1.6-.2 2.2 0Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             {generating ? "Generating…" : "None of these? Generate a new recipe"}
           </button>
         </section>
