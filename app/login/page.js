@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -18,17 +15,28 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
-    const { error: signInError } = await getSupabaseClient().auth.signInWithPassword({
-      email,
-      password,
+    // Signs in server-side so the session cookie arrives via the response's
+    // Set-Cookie header instead of a client-side document.cookie write —
+    // some mobile browsers silently drop the latter while still honoring
+    // server-set cookies. A hard navigation (not router.push) ensures the
+    // browser client re-reads that cookie fresh on load.
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
 
-    setLoading(false);
-    if (signInError) {
-      setError(signInError.message);
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      setLoading(false);
+      setError(body?.error ?? "Couldn't sign in. Please try again.");
       return;
     }
-    router.push("/");
+    // Hard navigation, not router.push: the browser client never itself
+    // called signIn (the server route did), so it has no reason to re-read
+    // the now-present session cookie without a fresh page load.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.href = "/";
   }
 
   return (

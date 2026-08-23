@@ -162,6 +162,29 @@ export default function AuthDebug() {
       localStorageResult = `threw: ${err.message}`;
     }
 
+    // Ground truth for whether this page is actually running as an
+    // installed/standalone PWA (home screen icon) vs a regular browser tab
+    // — don't trust what we think we're testing in, check directly.
+    const displayMode = window.matchMedia("(display-mode: standalone)").matches
+      ? "STANDALONE (installed PWA)"
+      : window.navigator.standalone === true
+        ? "STANDALONE (iOS)"
+        : "browser tab";
+
+    // Confirms this script is actually running as the page's own top-level
+    // window, not inside an iframe or some other embedded context — an
+    // iframe without allow-same-origin throws exactly the storage errors
+    // seen here.
+    const windowIdentity = {
+      href: window.location.href,
+      origin: window.location.origin,
+      isTopWindow: window === window.top,
+      isSelfEqualsParent: window.self === window.parent,
+      frameElement: window.frameElement ? "INSIDE AN IFRAME" : "none (top-level)",
+      documentReadyState: document.readyState,
+      documentURL: document.URL,
+    };
+
     const supabase = getSupabaseClient();
     const startedAt = Date.now();
     let session = null;
@@ -182,6 +205,8 @@ export default function AuthDebug() {
       cookieDescriptorNative,
       cookieStoreResult,
       localStorageResult,
+      displayMode,
+      windowIdentity,
       probeWorks,
       bareWorks,
       rawCookieString: rawCookieString || "(empty)",
@@ -213,6 +238,11 @@ export default function AuthDebug() {
         </button>
       </div>
       <div>checked: {info.time} ({info.elapsedMs}ms)</div>
+      <div>display mode: {info.displayMode}</div>
+      <div className="break-all">location: {info.windowIdentity.href}</div>
+      <div>top-level window: {info.windowIdentity.isTopWindow ? "yes" : "NO"}</div>
+      <div>frame: {info.windowIdentity.frameElement}</div>
+      <div>document.readyState: {info.windowIdentity.documentReadyState}</div>
       <div>navigator.cookieEnabled: {String(info.cookieEnabled)}</div>
       <div>document.cookie is native (untampered): {info.cookieDescriptorNative}</div>
       <div>cookieStore API test: {info.cookieStoreResult}</div>

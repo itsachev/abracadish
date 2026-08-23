@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,23 +16,26 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
 
-    const { data, error: signUpError } = await getSupabaseClient().auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    // Signs up server-side so any session returned immediately (email
+    // confirmation off) arrives via Set-Cookie instead of a client-side
+    // document.cookie write — see /api/auth/login for why.
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
+    const resBody = await res.json().catch(() => null);
 
     setLoading(false);
-    if (signUpError) {
-      setError(signUpError.message);
+    if (!res.ok) {
+      setError(resBody?.error ?? "Couldn't create your account. Please try again.");
       return;
     }
 
-    // Whether this returns a live session depends on the project's
-    // "confirm email" setting in Supabase — with it on (the default),
-    // there's no session until the user clicks the emailed link.
-    if (data.session) {
-      router.push("/");
+    if (resBody?.hasSession) {
+      // Hard navigation, not router.push — see login/page.js for why.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.href = "/";
       return;
     }
     setCheckEmail(true);
