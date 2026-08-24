@@ -329,6 +329,8 @@ export default function ResultsPage() {
             </section>
           )}
 
+          <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
+
           <div className="mt-6">
             <button
               type="button"
@@ -347,8 +349,6 @@ export default function ResultsPage() {
               Get a recipe
             </button>
           </div>
-
-          <LocationPrompt restaurantName={restaurantName} onRestaurantNameChange={setRestaurantName} />
 
           <SaveScanButton dish={dish} answers={answers} restaurantName={restaurantName} photo={photo} />
         </>

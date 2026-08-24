@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthUser } from "@/lib/useAuthUser";
 import { subscribeToShoppingListAdditions } from "@/lib/shoppingList";
+import { hasSeenScanNav, markScanNavSeen } from "@/lib/scanNavHint";
 
 const HIGHLIGHT_MS = 3000;
 
@@ -108,6 +109,7 @@ export default function BottomNav() {
   const tabs = TABS.filter((tab) => !tab.requiresAuth || user);
   const [justAddedToList, setJustAddedToList] = useState(false);
   const highlightTimer = useRef(null);
+  const [pulseScan, setPulseScan] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeToShoppingListAdditions(() => {
@@ -121,6 +123,15 @@ export default function BottomNav() {
     };
   }, []);
 
+  useEffect(() => {
+    setPulseScan(pathname === "/" && user === null && !hasSeenScanNav());
+  }, [pathname, user]);
+
+  function handleScanClick() {
+    markScanNavSeen();
+    setPulseScan(false);
+  }
+
   return (
     <nav
       className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-surface/95 backdrop-blur-xl
@@ -133,10 +144,12 @@ export default function BottomNav() {
               ? pathname === "/"
               : pathname === tab.href || pathname?.startsWith(`${tab.href}/`);
           const highlighted = tab.href === "/shopping-list" && justAddedToList;
+          const scanPulse = tab.href === "/scan" && pulseScan;
           return (
             <li key={tab.href} className="flex-1">
               <Link
                 href={tab.href}
+                onClick={tab.href === "/scan" ? handleScanClick : undefined}
                 className={`relative flex h-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
                   highlighted ? "animate-blink-accent" : active ? "text-foreground" : "text-muted"
                 }`}
@@ -144,7 +157,19 @@ export default function BottomNav() {
                 {active && (
                   <span className="gradient-accent absolute -top-px h-0.5 w-8 rounded-full" />
                 )}
-                <span className={highlighted ? "" : active ? "text-accent" : ""}>{tab.icon(active)}</span>
+                <span
+                  className={`relative flex items-center justify-center ${
+                    highlighted || scanPulse ? "" : active ? "text-accent" : ""
+                  }`}
+                >
+                  {scanPulse && (
+                    <span
+                      aria-hidden
+                      className="animate-pulse-ring absolute inset-0 -m-1.5 rounded-full bg-accent/50"
+                    />
+                  )}
+                  <span className={scanPulse ? "text-accent" : ""}>{tab.icon(active)}</span>
+                </span>
                 {tab.label}
               </Link>
             </li>
