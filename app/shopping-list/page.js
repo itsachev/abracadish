@@ -94,13 +94,42 @@ export default function ShoppingListPage() {
       )}
 
       {items.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center gap-3 text-center">
-          <p className="text-sm text-muted">
-            Add ingredients from a recipe to build your list.
-          </p>
+        <div className="relative mt-10 flex flex-col items-center gap-4 text-center">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-8 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full opacity-40 blur-[70px]"
+            style={{
+              backgroundImage:
+                "radial-gradient(closest-side, var(--accent), var(--accent-2), transparent)",
+            }}
+          />
+          <div className="gradient-accent-soft relative flex h-16 w-16 items-center justify-center rounded-full border border-accent/20">
+            <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 text-accent">
+              <path
+                d="M9 8V6a3 3 0 0 1 6 0v2"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+              />
+              <path
+                d="M6 8h12l-1 12.2a1.5 1.5 0 0 1-1.5 1.3h-8a1.5 1.5 0 0 1-1.5-1.3L6 8Z"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div className="relative">
+            <h2 className="font-display text-xl font-bold text-foreground">Your list is empty</h2>
+            <p className="mx-auto mt-1.5 max-w-[26ch] text-sm text-muted">
+              Add ingredients from any recipe and they&apos;ll land here, grouped by dish.
+            </p>
+          </div>
+
           <Link
             href="/scan"
-            className="gradient-accent flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+            className="gradient-accent glow-accent relative mt-1 flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
               <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="2" />

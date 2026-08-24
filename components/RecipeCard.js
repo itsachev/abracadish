@@ -1,16 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import MatchBadge from "@/components/MatchBadge";
+import CookedBadge from "@/components/CookedBadge";
 import { toggleSavedRecipe } from "@/lib/savedRecipes";
+import { isRecipeCooked, subscribeToCookedChanges } from "@/lib/cookedRecipes";
 
 // matchScore/matchReasons are ephemeral, query-time results (from
 // /api/match-recipes) — not stored on the recipe row — so we carry them
 // through the URL to the detail page rather than re-querying there.
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, showRemove = true }) {
   const cardRef = useRef(null);
   const [confirming, setConfirming] = useState(false);
+  const cooked = useSyncExternalStore(
+    subscribeToCookedChanges,
+    () => isRecipeCooked(recipe.id),
+    () => false
+  );
 
   useEffect(() => {
     if (!confirming) return;
@@ -37,13 +44,16 @@ export default function RecipeCard({ recipe }) {
 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate font-semibold text-foreground">{recipe.title}</h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="truncate font-semibold text-foreground">{recipe.title}</h3>
+            {cooked && <CookedBadge />}
+          </div>
           <p className="mt-0.5 text-sm text-muted">
             {recipe.cuisine} · {recipe.protein}
           </p>
         </div>
 
-        {confirming ? (
+        {!showRemove ? null : confirming ? (
           <div className="relative z-10 flex shrink-0 items-center gap-1.5">
             <button
               type="button"

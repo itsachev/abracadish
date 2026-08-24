@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { trackEvent } from "@/lib/trackEvent";
+import { markRecipeCooked } from "@/lib/cookedRecipes";
 
 function formatTime(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
@@ -42,7 +43,8 @@ export default function CookingMode({ recipe }) {
   function goNext() {
     if (isLastStep) {
       trackEvent("cooking_completed", { recipeId: recipe.id, dishName: recipe.title });
-      router.push(`/recipe/${recipe.id}`);
+      markRecipeCooked(recipe.id);
+      router.push(`/cook/${recipe.id}/done`);
       return;
     }
     setStepIndex((i) => Math.min(i + 1, recipe.steps.length - 1));

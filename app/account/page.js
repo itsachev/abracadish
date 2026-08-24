@@ -55,6 +55,13 @@ export default function AccountPage() {
           <span className="text-muted">→</span>
         </Link>
         <Link
+          href="/cooked"
+          className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+        >
+          Cooked recipes
+          <span className="text-muted">→</span>
+        </Link>
+        <Link
           href="/progress"
           className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >

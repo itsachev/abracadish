@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import MatchBadge from "@/components/MatchBadge";
 import SaveButton from "@/components/SaveButton";
+import CookedMark from "@/components/CookedMark";
 import AddToShoppingListButton from "@/components/AddToShoppingListButton";
 import RecipeRemixBar from "@/components/RecipeRemixBar";
 import { getRecipeById } from "@/lib/recipes";
@@ -19,7 +20,9 @@ export default async function RecipePage({ params, searchParams }) {
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{recipe.title}</h1>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
+            {recipe.title} <CookedMark recipeId={recipe.id} />
+          </h1>
           <p className="mt-1 text-sm text-muted">
             {recipe.cuisine} · {recipe.protein} · Serves {recipe.servings}
           </p>
@@ -65,24 +68,21 @@ export default async function RecipePage({ params, searchParams }) {
         </section>
       )}
 
-      <section className="mt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
-          Ingredients
-        </h2>
-        <ul className="mt-2 divide-y divide-border">
+      <section className="bg-surface mt-6 rounded-3xl border border-border p-5 pt-3">
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-border" />
+        <h2 className="font-display text-lg font-bold text-foreground">Ingredients</h2>
+        <ul className="mt-3 space-y-3">
           {recipe.ingredients.map((ingredient) => (
-            <li
-              key={ingredient.name}
-              className="flex items-center justify-between py-2 text-sm text-foreground/90"
-            >
-              <span>{ingredient.name}</span>
+            <li key={ingredient.name} className="flex items-start gap-3 text-sm">
+              <span className="mt-1.75 h-1.5 w-1.5 flex-none rounded-full bg-accent" />
+              <span className="flex-1 text-foreground/90">{ingredient.name}</span>
               <span className="font-mono text-muted">
                 {ingredient.quantity} {ingredient.unit}
               </span>
             </li>
           ))}
         </ul>
-        <AddToShoppingListButton recipe={recipe} className="mt-3" />
+        <AddToShoppingListButton recipe={recipe} className="mt-4" />
       </section>
 
       <RecipeRemixBar recipe={recipe} />
