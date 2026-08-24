@@ -31,7 +31,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-md items-center justify-between px-5">
-        <Link href="/" className="font-display text-3xl font-normal tracking-tight">
+        <Link href="/" className="font-display text-3xl font-bold tracking-tight">
           <span className="text-foreground">Abraca</span>
           <span className="text-accent italic">Dish</span>
         </Link>
@@ -74,7 +74,7 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex w-full items-center justify-end gap-1.5 px-4 py-2.5 text-right text-sm text-red-400 hover:bg-surface-hover"
+                  className="flex w-full items-center justify-end gap-1.5 px-4 py-2.5 text-right text-sm text-red-600 hover:bg-surface-hover"
                 >
                   Log out
                   <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">

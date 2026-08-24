@@ -115,7 +115,7 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
   }
 
   return (
-    <section className="mt-6 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+    <section className="mt-6 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
       <h2 className="text-sm font-semibold text-foreground">Where did you have this?</h2>
       <p className="text-xs text-muted">Optional — helps with restaurant matching later.</p>
 
@@ -140,7 +140,7 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
         ))}
 
       {location ? (
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400">
+        <p className="mt-3 flex items-center gap-1.5 text-xs text-emerald-600">
           <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
             <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" />
             <path

@@ -53,7 +53,7 @@ export default function ProgressPage() {
   if (scans.length === 0) {
     return (
       <div className="mx-auto max-w-md px-5 pt-10 text-center">
-        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Your progress</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Your progress</h1>
         <p className="mt-3 text-sm text-muted">Scan your first dish to start building a streak.</p>
         <Link
           href="/scan"
@@ -71,9 +71,9 @@ export default function ProgressPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Your progress</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Your progress</h1>
 
-      <section className="mt-5 rounded-2xl border border-accent/30 bg-accent-soft p-5 text-center">
+      <section className="mt-5 rounded-3xl border border-accent/30 bg-accent-soft p-5 text-center">
         <div className="text-5xl">🔥</div>
         <div className="gradient-text mt-2 font-mono text-4xl font-bold">{current}</div>
         <p className="text-sm font-medium text-foreground/90">
@@ -88,17 +88,17 @@ export default function ProgressPage() {
       </section>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+        <div className="rounded-3xl border border-border bg-surface p-4 text-center">
           <div className="font-mono text-2xl font-bold text-foreground">{scans.length}</div>
           <p className="text-xs text-muted">dishes scanned</p>
         </div>
-        <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+        <div className="rounded-3xl border border-border bg-surface p-4 text-center">
           <div className="font-mono text-2xl font-bold text-foreground">{badges.length}</div>
           <p className="text-xs text-muted">cuisines explored</p>
         </div>
       </div>
 
-      <section className="mt-4 rounded-2xl border border-border bg-surface p-4">
+      <section className="mt-4 rounded-3xl border border-border bg-surface p-4">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">This week</h2>
         <p className="mt-1.5 text-sm text-foreground/90">
           {scansThisWeek === 0

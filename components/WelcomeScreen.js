@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
       />
 
       <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col">
-        <h1 className="font-display text-4xl font-normal leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
           Welcome to Abraca<span className="gradient-text">dish</span>
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-muted">
@@ -84,7 +84,7 @@ export default function WelcomeScreen() {
           {STEPS.map((step) => (
             <li
               key={step.title}
-              className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm"
+              className="flex items-start gap-3 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm"
             >
               <span className="text-2xl" aria-hidden>
                 {step.emoji}
@@ -104,7 +104,7 @@ export default function WelcomeScreen() {
         <button
           type="button"
           onClick={handleDismiss}
-          className="gradient-accent glow-accent mt-4 flex items-center justify-center gap-2 rounded-2xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+          className="gradient-accent glow-accent mt-4 flex items-center justify-center gap-2 rounded-3xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
             <path

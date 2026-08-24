@@ -5,8 +5,8 @@ export default function manifest() {
     description: "Snap a dish. Discover the recipe behind it. Cook it at home.",
     start_url: "/",
     display: "standalone",
-    background_color: "#14100e",
-    theme_color: "#14100e",
+    background_color: "#f5efe3",
+    theme_color: "#f5efe3",
     orientation: "portrait",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

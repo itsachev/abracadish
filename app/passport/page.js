@@ -76,7 +76,7 @@ export default function PassportPage() {
   if (scans.length === 0) {
     return (
       <div className="mx-auto max-w-md px-5 pt-10 text-center">
-        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Your dish passport</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Your dish passport</h1>
         <p className="mt-3 text-sm text-muted">Scan your first dish to earn your first stamp.</p>
         <Link
           href="/scan"
@@ -98,15 +98,15 @@ export default function PassportPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Your dish passport</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Your dish passport</h1>
       <p className="mt-1 text-sm text-muted">Every cuisine you&apos;ve scanned, stamped and collected.</p>
 
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+        <div className="rounded-3xl border border-border bg-surface p-4 text-center">
           <div className="gradient-text font-mono text-2xl font-bold">{passport.length}</div>
           <p className="text-xs text-muted">cuisines unlocked</p>
         </div>
-        <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+        <div className="rounded-3xl border border-border bg-surface p-4 text-center">
           <div className="font-mono text-2xl font-bold text-foreground">{scans.length}</div>
           <p className="text-xs text-muted">dishes scanned</p>
         </div>
@@ -119,7 +119,7 @@ export default function PassportPage() {
             <div
               key={entry.cuisine}
               style={{ transform: `rotate(${stampTilt(index)})` }}
-              className="rounded-2xl border-2 border-dashed border-accent/40 bg-accent-soft p-4 text-center"
+              className="rounded-3xl border-2 border-dashed border-accent/40 bg-accent-soft p-4 text-center"
             >
               <div className="text-4xl">{getCuisineEmoji(entry.cuisine)}</div>
               <p className="mt-2 text-sm font-semibold uppercase tracking-wide text-foreground">
@@ -142,7 +142,7 @@ export default function PassportPage() {
               <div
                 key={cuisine}
                 style={{ transform: `rotate(${stampTilt(index)})` }}
-                className="rounded-2xl border-2 border-dashed border-border bg-surface/60 p-4 text-center opacity-60"
+                className="rounded-3xl border-2 border-dashed border-border bg-surface/60 p-4 text-center opacity-60"
               >
                 <div className="text-4xl grayscale">🔒</div>
                 <p className="mt-2 text-sm font-semibold uppercase tracking-wide text-foreground/80">
@@ -154,7 +154,7 @@ export default function PassportPage() {
           </div>
           <Link
             href="/scan"
-            className="gradient-accent-soft mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
+            className="gradient-accent-soft mt-4 flex w-full items-center justify-center gap-2 rounded-3xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
               <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="1.6" />

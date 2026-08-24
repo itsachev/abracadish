@@ -39,9 +39,9 @@ export default function AccountPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Account</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Account</h1>
 
-      <div className="mt-4 rounded-2xl border border-border bg-surface p-4">
+      <div className="mt-4 rounded-3xl border border-border bg-surface p-4">
         <p className="text-xs uppercase tracking-wide text-muted">Signed in as</p>
         <p className="mt-1 truncate text-sm font-medium text-foreground">{user.email}</p>
       </div>
@@ -49,21 +49,21 @@ export default function AccountPage() {
       <div className="mt-4 space-y-3">
         <Link
           href="/saved"
-          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+          className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >
           Saved scans & recipes
           <span className="text-muted">→</span>
         </Link>
         <Link
           href="/progress"
-          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+          className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >
           Progress
           <span className="text-muted">→</span>
         </Link>
         <Link
           href="/passport"
-          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+          className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >
           Dish passport
           <span className="text-muted">→</span>
@@ -74,7 +74,7 @@ export default function AccountPage() {
         type="button"
         onClick={handleSignOut}
         disabled={signingOut}
-        className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-2xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:border-red-400/40 hover:text-red-400 disabled:opacity-60"
+        className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-3xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:border-red-400/40 hover:text-red-600 disabled:opacity-60"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
           <path

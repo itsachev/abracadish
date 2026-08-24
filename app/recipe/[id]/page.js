@@ -19,7 +19,7 @@ export default async function RecipePage({ params, searchParams }) {
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{recipe.title}</h1>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{recipe.title}</h1>
           <p className="mt-1 text-sm text-muted">
             {recipe.cuisine} · {recipe.protein} · Serves {recipe.servings}
           </p>
@@ -37,7 +37,7 @@ export default async function RecipePage({ params, searchParams }) {
       <div className="mt-4 mb-10 flex items-center gap-2">
         <MatchBadge matchType={recipe.matchType} />
         {recipe.source?.remixOf && (
-          <span className="rounded-full bg-white/8 py-2 px-4 text-xs text-muted">
+          <span className="rounded-full bg-black/5 py-2 px-4 text-xs text-muted">
             Remixed: {recipe.source.remixLabel}
             {recipe.source.remixOfTitle ? (
               <>
@@ -52,12 +52,12 @@ export default async function RecipePage({ params, searchParams }) {
       </div>
 
       {matchReasons.length > 0 && (
-        <section className="mt-5 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+        <section className="mt-5 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
           <h2 className="text-sm font-semibold text-foreground">Why this matches</h2>
           <ul className="mt-2 space-y-1">
             {matchReasons.map((reason) => (
               <li key={reason} className="flex items-center gap-2 text-sm text-foreground/90">
-                <span className="text-emerald-400">✓</span>
+                <span className="text-emerald-600">✓</span>
                 {reason}
               </li>
             ))}
@@ -104,7 +104,7 @@ export default async function RecipePage({ params, searchParams }) {
       <div className="mt-8 flex gap-3">
         <Link
           href={`/cook/${recipe.id}`}
-          className="gradient-accent glow-accent flex flex-1 items-center justify-center gap-2 rounded-2xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+          className="gradient-accent glow-accent flex flex-1 items-center justify-center gap-2 rounded-3xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
             <path
@@ -122,7 +122,7 @@ export default async function RecipePage({ params, searchParams }) {
 
       <Link
         href="/scan"
-        className="gradient-accent-soft mt-3 flex items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
+        className="gradient-accent-soft mt-3 flex items-center justify-center gap-2 rounded-3xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
           <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="2" />

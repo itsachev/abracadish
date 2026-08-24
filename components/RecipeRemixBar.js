@@ -28,7 +28,7 @@ export default function RecipeRemixBar({ recipe }) {
   }
 
   return (
-    <section className="mt-6 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+    <section className="mt-6 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
       <h2 className="text-sm font-semibold text-foreground">Remix this recipe</h2>
       <p className="text-xs text-muted">Let AI rework it to fit a constraint.</p>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -52,7 +52,7 @@ export default function RecipeRemixBar({ recipe }) {
           </button>
         ))}
       </div>
-      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
     </section>
   );
 }

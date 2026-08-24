@@ -84,7 +84,7 @@ export default function MatchesPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{dish.name}</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{dish.name}</h1>
 
       {searching && (
         <div className="mt-10 flex flex-col items-center gap-3 text-center">
@@ -134,7 +134,7 @@ export default function MatchesPage() {
                       matchType: recipe.matchType,
                     })
                   }
-                  className="block rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
+                  className="block rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -162,7 +162,7 @@ export default function MatchesPage() {
                       <ul className="mt-1.5 space-y-1">
                         {recipe.matchReasons.map((reason) => (
                           <li key={reason} className="flex items-center gap-2 text-xs text-foreground/80">
-                            <span className="text-emerald-400">✓</span>
+                            <span className="text-emerald-600">✓</span>
                             {reason}
                           </li>
                         ))}
@@ -178,7 +178,7 @@ export default function MatchesPage() {
             type="button"
             onClick={handleGenerateInstead}
             disabled={generating}
-            className="gradient-accent-soft mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-60"
+            className="gradient-accent-soft mt-4 flex w-full items-center justify-center gap-2 rounded-3xl border border-accent/30 py-3.5 text-center text-sm font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-60"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
               <path

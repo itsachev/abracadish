@@ -117,14 +117,14 @@ export default function ScanDetailPage() {
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
       {scan.imageUrl && (
-        <div className="overflow-hidden rounded-2xl border border-border bg-white/5">
+        <div className="overflow-hidden rounded-3xl border border-border bg-black/5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={scan.imageUrl} alt={scan.dishName} className="h-56 w-full object-cover" />
         </div>
       )}
 
       <div className={`flex items-center justify-between ${scan.imageUrl ? "mt-6" : ""}`}>
-        <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{scan.dishName}</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{scan.dishName}</h1>
         {typeof scan.confidence === "number" && (
           <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
             {Math.round(scan.confidence * 100)}% confidence
@@ -147,7 +147,7 @@ export default function ScanDetailPage() {
             {scan.confirmedIngredients.map((ingredient) => (
               <div
                 key={ingredient.name}
-                className="flex items-center justify-between rounded-2xl bg-emerald-400/10 px-4 py-3.5 text-sm"
+                className="flex items-center justify-between rounded-3xl bg-emerald-400/10 px-4 py-3.5 text-sm"
               >
                 <span className="text-foreground/90">{ingredient.name}</span>
                 <span className="font-mono text-xs text-muted">
@@ -166,7 +166,7 @@ export default function ScanDetailPage() {
             {scan.possibleIngredients.map((ingredient) => (
               <div
                 key={ingredient.name}
-                className="flex items-center justify-between rounded-2xl bg-amber-400/10 px-4 py-3.5 text-sm"
+                className="flex items-center justify-between rounded-3xl bg-amber-400/10 px-4 py-3.5 text-sm"
               >
                 <span className="text-foreground/90">{ingredient.name}</span>
                 <span className="font-mono text-xs text-muted">
@@ -181,7 +181,7 @@ export default function ScanDetailPage() {
       <button
         type="button"
         onClick={handleGetRecipe}
-        className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
+        className="gradient-accent glow-accent mt-8 flex w-full items-center justify-center gap-2 rounded-3xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98]"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
           <path
@@ -201,7 +201,7 @@ export default function ScanDetailPage() {
         type="button"
         onClick={handleCook}
         disabled={cooking}
-        className="gradient-accent-soft flex w-full items-center justify-center gap-2 rounded-2xl border border-accent/30 py-3.5 text-base font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-70"
+        className="gradient-accent-soft flex w-full items-center justify-center gap-2 rounded-3xl border border-accent/30 py-3.5 text-base font-semibold text-foreground transition-transform active:scale-[0.98] disabled:opacity-70"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
           <path
@@ -214,14 +214,14 @@ export default function ScanDetailPage() {
         </svg>
         {cooking ? "Finding a recipe…" : "Cook me"}
       </button>
-      {cookError && <p className="mt-2 text-center text-sm text-red-400">{cookError}</p>}
+      {cookError && <p className="mt-2 text-center text-sm text-red-600">{cookError}</p>}
 
       {confirming ? (
         <div className="mt-4 flex items-center gap-2">
           <button
             type="button"
             onClick={() => setConfirming(false)}
-            className="flex-1 rounded-2xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:text-foreground"
+            className="flex-1 rounded-3xl border border-border py-3 text-sm font-semibold text-muted transition-colors hover:text-foreground"
           >
             Cancel
           </button>
@@ -229,7 +229,7 @@ export default function ScanDetailPage() {
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="flex-1 rounded-2xl bg-red-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-600 disabled:opacity-60"
+            className="flex-1 rounded-3xl bg-red-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-600 disabled:opacity-60"
           >
             {deleting ? "Deleting…" : "Confirm delete"}
           </button>
@@ -238,7 +238,7 @@ export default function ScanDetailPage() {
         <button
           type="button"
           onClick={() => setConfirming(true)}
-          className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl border border-border py-3 text-sm font-semibold text-red-400 transition-colors hover:border-red-400/40"
+          className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-3xl border border-border py-3 text-sm font-semibold text-red-600 transition-colors hover:border-red-400/40"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
             <path

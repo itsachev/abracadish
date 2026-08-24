@@ -31,7 +31,7 @@ export default function RoastButton({ photo, dishName }) {
 
   if (roast) {
     return (
-      <div className="mt-4 rounded-2xl border border-accent/30 bg-accent-soft p-4">
+      <div className="mt-4 rounded-3xl border border-accent/30 bg-accent-soft p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-accent">🔥 The roast</p>
         <p className="mt-1.5 text-sm italic text-foreground/90">&ldquo;{roast}&rdquo;</p>
         <button
@@ -56,7 +56,7 @@ export default function RoastButton({ photo, dishName }) {
       >
         {loading ? "Roasting…" : "🔥 Roast my plating"}
       </button>
-      {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
     </div>
   );
 }

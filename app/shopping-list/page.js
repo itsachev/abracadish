@@ -37,7 +37,7 @@ export default function ShoppingListPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Shopping list</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Shopping list</h1>
 
       {items.length > 0 && (
         <div className="mt-4 flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function ShoppingListPage() {
               <button
                 type="button"
                 onClick={() => setConfirmingClearAll(true)}
-                className={`flex h-9 items-center justify-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-3.5 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/20 ${
+                className={`flex h-9 items-center justify-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-3.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-500/20 ${
                   hasChecked ? "flex-1" : "w-full"
                 }`}
               >
@@ -152,7 +152,7 @@ export default function ShoppingListPage() {
                       type="button"
                       onClick={() => removeShoppingItem(item.id)}
                       aria-label="Remove item"
-                      className="shrink-0 text-muted hover:text-red-400"
+                      className="shrink-0 text-muted hover:text-red-600"
                     >
                       <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                         <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

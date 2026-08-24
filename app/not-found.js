@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="mx-auto max-w-md px-5 pt-16 text-center">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Nothing here</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Nothing here</h1>
       <p className="mt-3 text-sm text-muted">
         This page doesn&apos;t exist — it may have been removed, or the link might be broken.
       </p>

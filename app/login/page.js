@@ -58,7 +58,7 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Sign in</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Sign in</h1>
       <p className="mt-1 text-sm text-muted">Sign in to save and revisit your scan history.</p>
 
       {linkExpired && (
@@ -118,12 +118,12 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
+          className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-3xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
         >
           {!loading && (
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">

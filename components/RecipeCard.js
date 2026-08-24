@@ -27,11 +27,11 @@ export default function RecipeCard({ recipe }) {
   return (
     <div
       ref={cardRef}
-      className="group relative rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
+      className="group relative rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
     >
       <Link
         href={`/recipe/${recipe.id}${query ? `?${query}` : ""}`}
-        className="absolute inset-0 rounded-2xl"
+        className="absolute inset-0 rounded-3xl"
         aria-label={recipe.title}
       />
 
@@ -74,7 +74,7 @@ export default function RecipeCard({ recipe }) {
               type="button"
               onClick={() => setConfirming(true)}
               aria-label="Remove saved recipe"
-              className="relative z-10 rounded-full p-1.5 text-red-400 transition-colors hover:bg-red-400/10"
+              className="relative z-10 rounded-full p-1.5 text-red-600 transition-colors hover:bg-red-400/10"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                 <path

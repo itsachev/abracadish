@@ -85,7 +85,7 @@ export default function ResultsPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-white/5">
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-black/5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={photo} alt="Captured dish" className="h-56 w-full object-cover" />
         <button
@@ -138,8 +138,8 @@ export default function ResultsPage() {
       {dish && isNotADish(dish) && (
         <div className="mt-6">
           <div className="flex items-center justify-between">
-            <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{dish.name}</h1>
-            <span className="rounded-full bg-white/8 px-2.5 py-1 text-xs font-semibold text-muted">
+            <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{dish.name}</h1>
+            <span className="rounded-full bg-black/5 px-2.5 py-1 text-xs font-semibold text-muted">
               {Math.round(dish.confidence * 100)}% confidence
             </span>
           </div>
@@ -169,7 +169,7 @@ export default function ResultsPage() {
         <>
           <div className="mt-6">
             <div className="flex items-center justify-between">
-              <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">{dish.name}</h1>
+              <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">{dish.name}</h1>
               <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
                 {Math.round(dish.confidence * 100)}% confidence
               </span>
@@ -194,7 +194,7 @@ export default function ResultsPage() {
             }
 
             return (
-              <section className="mt-6 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+              <section className="mt-6 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
                   Dish profile
                 </h2>
@@ -219,7 +219,7 @@ export default function ResultsPage() {
                     {dish.ingredientCombinations.map((combo) => (
                       <span
                         key={combo}
-                        className="rounded-full bg-white/8 px-2.5 py-1 text-xs text-foreground/80"
+                        className="rounded-full bg-black/5 px-2.5 py-1 text-xs text-foreground/80"
                       >
                         {combo}
                       </span>
@@ -235,7 +235,7 @@ export default function ResultsPage() {
               What we see
             </h2>
 
-            <div className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-emerald-400">
+            <div className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                 <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.9" />
                 <path
@@ -252,7 +252,7 @@ export default function ResultsPage() {
               {dish.confirmedIngredients.map((ingredient) => (
                 <div
                   key={ingredient.name}
-                  className="flex items-center justify-between rounded-2xl bg-emerald-400/10 px-4 py-3.5 text-sm"
+                  className="flex items-center justify-between rounded-3xl bg-emerald-400/10 px-4 py-3.5 text-sm"
                 >
                   <span className="text-foreground/90">{ingredient.name}</span>
                   <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
@@ -262,7 +262,7 @@ export default function ResultsPage() {
 
             {dish.possibleIngredients.length > 0 && (
               <>
-                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-amber-400">
+                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-amber-600">
                   <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                     <circle
                       cx="12"
@@ -286,7 +286,7 @@ export default function ResultsPage() {
                   {dish.possibleIngredients.map((ingredient) => (
                     <div
                       key={ingredient.name}
-                      className="flex items-center justify-between rounded-2xl bg-amber-400/10 px-4 py-3.5 text-sm"
+                      className="flex items-center justify-between rounded-3xl bg-amber-400/10 px-4 py-3.5 text-sm"
                     >
                       <span className="text-foreground/90">{ingredient.name}</span>
                       <span className="font-mono text-xs text-muted">{Math.round(ingredient.confidence * 100)}%</span>
@@ -298,7 +298,7 @@ export default function ResultsPage() {
           </section>
 
           {dish.clarifyingQuestions.length > 0 && (
-            <section className="mt-6 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm">
+            <section className="mt-6 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
               <h2 className="text-sm font-semibold text-foreground">
                 A couple quick questions
               </h2>
@@ -333,7 +333,7 @@ export default function ResultsPage() {
             <button
               type="button"
               onClick={handleCook}
-              className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+              className="gradient-accent glow-accent flex w-full items-center justify-center gap-2 rounded-3xl py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                 <path

@@ -1,10 +1,10 @@
 import { MATCH_TYPE_LABELS } from "@/lib/recipeMatch";
 
 const STYLES = {
-  official: "bg-emerald-400/10 text-emerald-400",
+  official: "bg-emerald-400/10 text-emerald-600",
   likely: "bg-accent-soft text-accent",
-  similar: "bg-amber-400/10 text-amber-400",
-  "ai-generated": "bg-white/8 text-muted",
+  similar: "bg-amber-400/10 text-amber-600",
+  "ai-generated": "bg-black/5 text-muted",
 };
 
 export default function MatchBadge({ matchType }) {

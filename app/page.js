@@ -52,7 +52,7 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="font-display text-4xl font-normal leading-[1.15] tracking-tight sm:text-5xl">
+        <h1 className="font-display text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl">
           <span className="block sm:inline">
             <span className="gradient-text">Snap.</span>Identify.
           </span>{" "}
@@ -67,7 +67,7 @@ export default function Home() {
 
         <Link
           href="/scan"
-          className="gradient-accent glow-accent mt-9 flex items-center justify-center gap-2 rounded-2xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+          className="gradient-accent glow-accent mt-9 flex items-center justify-center gap-2 rounded-3xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
             <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="2" />
@@ -102,7 +102,7 @@ export default function Home() {
 
             <Link
               href="/passport"
-              className="gradient-accent-dark mt-5 flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+              className="gradient-accent-dark mt-5 flex w-full items-center justify-center gap-2 rounded-3xl border border-white/10 py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
             >
               <span className="text-xl">🍽️</span>
               Your dish passport
@@ -113,7 +113,7 @@ export default function Home() {
             {STEPS.map((step, i) => (
               <li
                 key={step.title}
-                className="flex items-start gap-4 rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm"
+                className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm"
               >
                 <span className="gradient-accent flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
                   {i + 1}

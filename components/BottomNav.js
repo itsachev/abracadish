@@ -123,7 +123,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-black/90 backdrop-blur-xl
+      className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-surface/95 backdrop-blur-xl
                  pb-[env(safe-area-inset-bottom)]"
     >
       <ul className="mx-auto flex h-16 max-w-md items-stretch justify-around">
@@ -138,7 +138,7 @@ export default function BottomNav() {
               <Link
                 href={tab.href}
                 className={`relative flex h-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
-                  highlighted ? "animate-blink-accent" : active ? "text-white" : "text-muted"
+                  highlighted ? "animate-blink-accent" : active ? "text-foreground" : "text-muted"
                 }`}
               >
                 {active && (

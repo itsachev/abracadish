@@ -51,9 +51,9 @@ export default function ScanCard({ scan, onDelete }) {
   return (
     <div
       ref={cardRef}
-      className="group relative rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
+      className="group relative rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
     >
-      <Link href={`/scans/${scan.id}`} className="absolute inset-0 rounded-2xl" aria-label={scan.dishName} />
+      <Link href={`/scans/${scan.id}`} className="absolute inset-0 rounded-3xl" aria-label={scan.dishName} />
 
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
@@ -65,7 +65,7 @@ export default function ScanCard({ scan, onDelete }) {
               className="h-14 w-14 shrink-0 rounded-xl object-cover"
             />
           ) : (
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/5 text-muted">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-black/5 text-muted">
               <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
                 <rect x="3.5" y="6.5" width="17" height="13" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
                 <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.6" />
@@ -117,7 +117,7 @@ export default function ScanCard({ scan, onDelete }) {
               type="button"
               onClick={() => setConfirming(true)}
               aria-label="Delete scan"
-              className="relative z-10 rounded-full p-1.5 text-red-400 transition-colors hover:bg-red-400/10"
+              className="relative z-10 rounded-full p-1.5 text-red-600 transition-colors hover:bg-red-400/10"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
                 <path
@@ -151,7 +151,7 @@ export default function ScanCard({ scan, onDelete }) {
           </svg>
           {cooking ? "Finding a recipe…" : "Cook me"}
         </button>
-        {cookError && <p className="mt-1.5 text-center text-xs text-red-400">{cookError}</p>}
+        {cookError && <p className="mt-1.5 text-center text-xs text-red-600">{cookError}</p>}
       </div>
     </div>
   );

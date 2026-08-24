@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #14100e;
-  --background-elevated: #1d1714;
-  --surface: #1d1714;
-  --surface-hover: #262019;
-  --border: rgba(255, 240, 230, 0.08);
-  --foreground: #f6efe7;
-  --muted: #b7a99c;
-  --accent: #e1713f;
-  --accent-2: #ff5f7e;
-  --accent-soft: rgba(225, 113, 63, 0.14);
-  --accent-ink: #201007;
+  --background: #f5efe3;
+  --background-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #fbf5e9;
+  --border: rgba(35, 25, 12, 0.08);
+  --foreground: #241c12;
+  --muted: #8b8071;
+  --accent: #f0a430;
+  --accent-2: #f6c667;
+  --accent-soft: rgba(240, 164, 48, 0.14);
+  --accent-ink: #2a1704;
 }
 
 @theme inline {
@@ -26,7 +26,7 @@
   --color-accent-2: var(--accent-2);
   --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-manrope);
-  --font-display: var(--font-instrument-serif);
+  --font-display: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -35,7 +35,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -54,7 +54,7 @@ body {
 }
 
 .gradient-accent-soft {
-  background-image: linear-gradient(135deg, rgba(225, 113, 63, 0.28), rgba(255, 95, 126, 0.14));
+  background-image: linear-gradient(135deg, rgba(240, 164, 48, 0.22), rgba(246, 198, 103, 0.16));
 }
 
 .gradient-accent-dark {
@@ -62,7 +62,7 @@ body {
 }
 
 .gradient-text {
-  background-image: linear-gradient(135deg, #f2a87d, var(--accent-2));
+  background-image: linear-gradient(135deg, var(--accent), #d97f1e);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -70,8 +70,17 @@ body {
 
 .glow-accent {
   box-shadow:
-    0 8px 30px -6px rgba(255, 95, 126, 0.4),
-    0 4px 16px -6px rgba(225, 113, 63, 0.4);
+    0 10px 24px -8px rgba(240, 164, 48, 0.45),
+    0 4px 12px -4px rgba(217, 127, 30, 0.3);
+}
+
+/* Soft card shadow for the app's white surfaces, matching the reference
+   design's floating-card look — targets the existing bg-surface utility
+   directly so every card gets it without touching each component. */
+.bg-surface {
+  box-shadow:
+    0 1px 2px rgba(35, 25, 12, 0.04),
+    0 6px 20px -8px rgba(35, 25, 12, 0.08);
 }
 
 @keyframes blink-accent {

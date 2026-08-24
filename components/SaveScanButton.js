@@ -55,7 +55,7 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
 
   if (!user) {
     return (
-      <div className="mt-4 rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
+      <div className="mt-4 rounded-3xl border border-border bg-surface p-4 text-center text-sm text-muted">
         <Link href="/login" className="text-accent underline">
           Sign in
         </Link>{" "}
@@ -70,7 +70,7 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
         type="button"
         onClick={handleSave}
         disabled={status === "saving" || status === "saved"}
-        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
+        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-3xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
           status === "saved" ? "bg-emerald-500" : "gradient-accent glow-accent"
         }`}
       >

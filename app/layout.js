@@ -1,4 +1,4 @@
-import { Geist_Mono, Manrope, Instrument_Serif } from "next/font/google";
+import { Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -7,13 +7,6 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
 const geistMono = Geist_Mono({
@@ -41,7 +34,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#14100e",
+  themeColor: "#f5efe3",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -52,7 +45,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <ServiceWorkerRegister />

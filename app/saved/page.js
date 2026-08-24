@@ -69,7 +69,7 @@ export default function SavedPage() {
 
   return (
     <div className="mx-auto max-w-md px-5 pt-6">
-      <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Saved recipes</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">Saved recipes</h1>
 
       {!loadingRecipes && recipes.length === 0 && (
         <div className="mt-6 flex flex-col items-center gap-3 text-center">
@@ -95,10 +95,10 @@ export default function SavedPage() {
         </div>
       )}
 
-      <h2 className="font-display text-3xl font-normal tracking-tight text-foreground mt-7">Scan history</h2>
+      <h2 className="font-display text-3xl font-bold tracking-tight text-foreground mt-7">Scan history</h2>
 
       {user === null && (
-        <div className="mt-4 rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
+        <div className="mt-4 rounded-3xl border border-border bg-surface p-4 text-center text-sm text-muted">
           <Link href="/login" className="text-accent underline">
             Sign in
           </Link>{" "}
