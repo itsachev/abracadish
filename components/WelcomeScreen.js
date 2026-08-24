@@ -62,7 +62,7 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-background px-6 pb-8 pt-12">
+    <div className="animate-fade-in fixed inset-0 z-50 flex flex-col overflow-y-auto bg-background px-6 pb-8 pt-12">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-32 left-1/2 h-[26rem] w-[26rem] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
