@@ -52,11 +52,13 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="font-display text-5xl font-normal leading-[1.1] tracking-tight">
-          <span className="gradient-text">Snap.</span>
-          Identify.
-          <span className="gradient-text">Find.</span>
-          Cook.
+        <h1 className="font-display text-4xl font-normal leading-[1.15] tracking-tight sm:text-5xl">
+          <span className="block sm:inline">
+            <span className="gradient-text">Snap.</span>Identify.
+          </span>{" "}
+          <span className="block sm:inline">
+            <span className="gradient-text">Find.</span>Cook.
+          </span>
         </h1>
         <p className="mt-4 text-[15px] leading-relaxed text-muted">
           Photograph any dish and discover the closest recipe behind it —
