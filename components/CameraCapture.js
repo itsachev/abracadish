@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { extractGpsFromFile } from "@/lib/exifLocation";
 import { saveScanLocation } from "@/lib/scanLocation";
 import { storePhoto } from "@/lib/photoStorage";
+import { trackEvent } from "@/lib/trackEvent";
 
 const MAX_DIMENSION = 1280;
 const JPEG_QUALITY = 0.82;
@@ -61,7 +62,8 @@ export default function CameraCapture() {
     };
   }, []);
 
-  function goToResults(dataUrl) {
+  function goToResults(dataUrl, source) {
+    trackEvent("photo_captured", { source });
     storePhoto(dataUrl);
     router.push("/results");
   }
@@ -105,10 +107,10 @@ export default function CameraCapture() {
     if (!video || !canvas || !ready) return;
     const dataUrl = drawScaledToCanvas(canvas, video, video.videoWidth, video.videoHeight);
     stopStream();
-    goToResults(dataUrl);
+    goToResults(dataUrl, "camera");
   }
 
-  async function handleFileChosen(event) {
+  async function handleFileChosen(event, source) {
     const file = event.target.files?.[0];
     // Reset so choosing the same file again still fires onChange.
     event.target.value = "";
@@ -126,7 +128,7 @@ export default function CameraCapture() {
       const bitmap = await createImageBitmap(file);
       const dataUrl = drawScaledToCanvas(canvas, bitmap, bitmap.width, bitmap.height);
       bitmap.close?.();
-      goToResults(dataUrl);
+      goToResults(dataUrl, source);
     } catch {
       setNotice("Couldn't read that photo. Try a different one.");
     } finally {
@@ -212,7 +214,7 @@ export default function CameraCapture() {
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={handleFileChosen}
+        onChange={(e) => handleFileChosen(e, "camera")}
         className="hidden"
       />
       {/* No capture attribute here — this one opens the plain photo gallery/picker. */}
@@ -220,7 +222,7 @@ export default function CameraCapture() {
         ref={galleryInputRef}
         type="file"
         accept="image/*"
-        onChange={handleFileChosen}
+        onChange={(e) => handleFileChosen(e, "gallery")}
         className="hidden"
       />
     </div>

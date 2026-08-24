@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackEvent } from "@/lib/trackEvent";
 
 function formatTime(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
@@ -18,6 +19,15 @@ export default function CookingMode({ recipe }) {
   const step = recipe.steps[stepIndex];
   const isLastStep = stepIndex === recipe.steps.length - 1;
 
+  useEffect(() => {
+    trackEvent("cooking_started", {
+      recipeId: recipe.id,
+      dishName: recipe.title,
+      stepCount: recipe.steps.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (timerStepIndex !== stepIndex) {
     setTimerStepIndex(stepIndex);
     setSecondsLeft(null);
@@ -31,6 +41,7 @@ export default function CookingMode({ recipe }) {
 
   function goNext() {
     if (isLastStep) {
+      trackEvent("cooking_completed", { recipeId: recipe.id, dishName: recipe.title });
       router.push(`/recipe/${recipe.id}`);
       return;
     }

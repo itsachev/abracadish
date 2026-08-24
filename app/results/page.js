@@ -7,6 +7,7 @@ import SaveScanButton from "@/components/SaveScanButton";
 import RoastButton from "@/components/RoastButton";
 import { storeDish } from "@/lib/dishStorage";
 import { getPhoto } from "@/lib/photoStorage";
+import { trackEvent } from "@/lib/trackEvent";
 
 function subscribeNoop() {
   return () => {};
@@ -56,7 +57,13 @@ export default function ResultsPage() {
         return res.json();
       })
       .then((data) => {
-        if (!cancelled) setDish(data);
+        if (cancelled) return;
+        setDish(data);
+        trackEvent("dish_recognized", {
+          dishName: data.name,
+          confidence: data.confidence,
+          recognized: !isNotADish(data),
+        });
       })
       .catch((err) => {
         if (!cancelled) setError(err.message || "Something went wrong.");

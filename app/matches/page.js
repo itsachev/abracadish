@@ -6,6 +6,7 @@ import Link from "next/link";
 import MatchBadge from "@/components/MatchBadge";
 import { findRecipeCandidates, generateRecipeForDish } from "@/lib/cookScan";
 import { getDish } from "@/lib/dishStorage";
+import { trackEvent } from "@/lib/trackEvent";
 
 function subscribeNoop() {
   return () => {};
@@ -35,9 +36,17 @@ export default function MatchesPage() {
     findRecipeCandidates(dish)
       .then((matches) => {
         if (cancelled) return;
+        trackEvent("matches_viewed", { dishName: dish.name, count: matches.length });
         if (matches.length === 0) {
           return generateRecipeForDish(dish).then((id) => {
-            if (!cancelled) router.replace(`/recipe/${id}`);
+            if (cancelled) return;
+            trackEvent("recipe_selected", {
+              dishName: dish.name,
+              recipeId: id,
+              source: "ai-generated",
+              auto: true,
+            });
+            router.replace(`/recipe/${id}`);
           });
         }
         setCandidates(matches);
@@ -56,6 +65,12 @@ export default function MatchesPage() {
     setError(null);
     try {
       const id = await generateRecipeForDish(dish);
+      trackEvent("recipe_selected", {
+        dishName: dish.name,
+        recipeId: id,
+        source: "ai-generated",
+        auto: false,
+      });
       router.push(`/recipe/${id}`);
     } catch (err) {
       setGenerating(false);
@@ -110,6 +125,15 @@ export default function MatchesPage() {
                 <Link
                   key={recipe.id}
                   href={`/recipe/${recipe.id}?${params.toString()}`}
+                  onClick={() =>
+                    trackEvent("recipe_selected", {
+                      dishName: dish.name,
+                      recipeId: recipe.id,
+                      source: "catalog",
+                      matchScore: recipe.matchScore,
+                      matchType: recipe.matchType,
+                    })
+                  }
                   className="block rounded-2xl border border-border bg-surface p-4 backdrop-blur-sm transition-colors hover:border-accent/40 hover:bg-surface-hover"
                 >
                   <div className="flex items-start justify-between gap-3">
