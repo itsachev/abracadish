@@ -1,4 +1,4 @@
-import { Geist_Mono, Manrope } from "next/font/google";
+import { Geist_Mono, Manrope, Fraunces } from "next/font/google";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -7,6 +7,14 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: "variable",
+  style: ["normal", "italic"],
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
 const geistMono = Geist_Mono({
@@ -45,7 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <ServiceWorkerRegister />
