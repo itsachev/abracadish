@@ -53,7 +53,8 @@ export default function Home() {
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
         <h1 className="font-display text-5xl font-normal leading-[1.1] tracking-tight">
-          Snap.Identify.
+          <span className="gradient-text">Snap.</span>
+          Identify.
           <span className="gradient-text">Find.</span>
           Cook.
         </h1>
@@ -75,14 +76,9 @@ export default function Home() {
 
         {hasActivity ? (
           <section className="mt-14">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Welcome back
-              </h2>
-              <Link href="/progress" className="text-xs font-medium text-accent hover:underline">
-                View progress
-              </Link>
-            </div>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Welcome back
+            </h2>
 
             {(() => {
               const { current } = computeStreak(scans);
@@ -101,6 +97,14 @@ export default function Home() {
             <div className="mt-3">
               <ScanCard scan={scans[0]} onDelete={handleDeleteLastScan} />
             </div>
+
+            <Link
+              href="/passport"
+              className="gradient-accent-dark mt-5 flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 py-3.5 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
+            >
+              <span className="text-xl">🍽️</span>
+              Your dish passport
+            </Link>
           </section>
         ) : (
           <ol className="mt-14 space-y-3">

@@ -109,9 +109,14 @@ export default function ProgressPage() {
 
       {badges.length > 0 && (
         <section className="mt-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Cuisines explored
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Cuisines explored
+            </h2>
+            <Link href="/passport" className="text-xs font-semibold text-accent">
+              View passport →
+            </Link>
+          </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {badges.map(({ cuisine, count }) => (
               <div

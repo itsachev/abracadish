@@ -64,6 +64,13 @@ export default function Header() {
                 >
                   Account
                 </Link>
+                <Link
+                  href="/passport"
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2.5 text-right text-sm text-foreground/90 hover:bg-surface-hover"
+                >
+                  Passport
+                </Link>
                 <button
                   type="button"
                   onClick={handleSignOut}
