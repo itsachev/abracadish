@@ -52,17 +52,16 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="font-display text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl">
-          <span className="block sm:inline">
+        <h1 className="font-display text-3xl font-bold tracking-tight flex">
+          <span className="block">
             <span className="gradient-text">Snap.</span>Identify.
-          </span>{" "}
-          <span className="block sm:inline">
+          </span>
+          <span className="block">
             <span className="gradient-text">Find.</span>Cook.
           </span>
         </h1>
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">
-          Photograph any dish and discover the closest recipe behind it —
-          with confidence you can trust, not AI guesses dressed up as facts.
+        <p className="text-[15px] leading-relaxed text-muted">
+          Snap a dish, find recipe and make it on your taste.
         </p>
 
         {hasActivity && (
@@ -111,7 +110,7 @@ export default function Home() {
             </Link>
           </section>
         ) : (
-          <ol className="mt-14 space-y-3">
+          <ol className="mt-7 space-y-3">
             {STEPS.map((step, i) => (
               <li
                 key={step.title}
