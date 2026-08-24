@@ -74,13 +74,14 @@ body {
     0 4px 12px -4px rgba(217, 127, 30, 0.3);
 }
 
-/* Soft card shadow for the app's white surfaces, matching the reference
-   design's floating-card look — targets the existing bg-surface utility
-   directly so every card gets it without touching each component. */
+/* Card shadow for the app's white surfaces — same offset/blur geometry as
+   .glow-accent buttons, but in a neutral dark ink tone rather than accent
+   orange. Targets the existing bg-surface utility directly so every card
+   gets it without touching each component. */
 .bg-surface {
   box-shadow:
-    0 1px 2px rgba(35, 25, 12, 0.04),
-    0 6px 20px -8px rgba(35, 25, 12, 0.08);
+    0 10px 24px -8px rgba(35, 25, 12, 0.22),
+    0 4px 12px -4px rgba(35, 25, 12, 0.14);
 }
 
 @keyframes blink-accent {
