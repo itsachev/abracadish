@@ -41,10 +41,10 @@ export default function Home() {
   const hasActivity = scans && scans.length > 0;
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/2 h-[26rem] w-[26rem] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
+        className="pointer-events-none absolute -top-32 left-1/2 h-[min(26rem,100vw)] w-[min(26rem,100vw)] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
         style={{
           backgroundImage:
             "radial-gradient(closest-side, var(--accent), var(--accent-2), transparent)",
@@ -52,7 +52,7 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="font-display text-3xl font-bold tracking-tight flex">
+        <h1 className="font-display text-3xl font-bold tracking-tight">
           <span className="block">
             <span className="gradient-text">Snap.</span>Identify.
           </span>
