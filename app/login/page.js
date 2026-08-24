@@ -1,9 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 
+function subscribeNoop() {
+  return () => {};
+}
+
+// Reads the "?error=expired" query param the auth callback route redirects
+// here with — useSyncExternalStore (not a plain read) so the server render
+// and the client's first render both see false, matching the hydration-safe
+// pattern used throughout this codebase (see /results' photo read).
+function getExpiredSnapshot() {
+  return new URLSearchParams(window.location.search).get("error") === "expired";
+}
+
+function getExpiredServerSnapshot() {
+  return false;
+}
+
 export default function LoginPage() {
+  const linkExpired = useSyncExternalStore(subscribeNoop, getExpiredSnapshot, getExpiredServerSnapshot);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +60,13 @@ export default function LoginPage() {
     <div className="mx-auto max-w-md px-5 pt-10">
       <h1 className="font-display text-3xl font-normal tracking-tight text-foreground">Sign in</h1>
       <p className="mt-1 text-sm text-muted">Sign in to save and revisit your scan history.</p>
+
+      {linkExpired && (
+        <p className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3.5 py-2.5 text-xs text-amber-300">
+          That confirmation link expired or was already used — sign in if you already confirmed, or
+          sign up again to get a new one.
+        </p>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-3">
         <input

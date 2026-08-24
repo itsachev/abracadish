@@ -58,13 +58,29 @@ export default function AccountPage() {
         <p className="mt-1 truncate text-sm font-medium text-foreground">{user.email}</p>
       </div>
 
-      <Link
-        href="/saved"
-        className="mt-4 flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
-      >
-        Saved scans & recipes
-        <span className="text-muted">→</span>
-      </Link>
+      <div className="mt-4 space-y-3">
+        <Link
+          href="/saved"
+          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+        >
+          Saved scans & recipes
+          <span className="text-muted">→</span>
+        </Link>
+        <Link
+          href="/progress"
+          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+        >
+          Progress
+          <span className="text-muted">→</span>
+        </Link>
+        <Link
+          href="/passport"
+          className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
+        >
+          Dish passport
+          <span className="text-muted">→</span>
+        </Link>
+      </div>
 
       <button
         type="button"

@@ -19,13 +19,14 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
   const user = useAuthUser();
   const location = useSyncExternalStore(subscribeNoop, readScanLocation, getServerSnapshotNull);
   const [status, setStatus] = useState("idle"); // idle | saving | saved | error
+  const [savedScanId, setSavedScanId] = useState(null);
 
   async function handleSave() {
     setStatus("saving");
 
     const imagePath = photo ? await uploadScanPhoto(user.id, photo) : null;
 
-    const { error } = await getSupabaseClient()
+    const { data, error } = await getSupabaseClient()
       .from("scans")
       .insert({
         user_id: user.id,
@@ -40,8 +41,11 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
         location: location ? { lat: location.lat, lng: location.lng, source: location.source } : null,
         location_label: location?.label ?? null,
         image_path: imagePath,
-      });
+      })
+      .select("id")
+      .single();
 
+    setSavedScanId(data?.id ?? null);
     setStatus(error ? "error" : "saved");
   }
 
@@ -61,26 +65,36 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleSave}
-      disabled={status === "saving" || status === "saved"}
-      className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
-        status === "saved" ? "bg-emerald-500" : "gradient-accent glow-accent"
-      }`}
-    >
-      {status !== "saved" && (
-        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-          <path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        </svg>
+    <>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={status === "saving" || status === "saved"}
+        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-70 ${
+          status === "saved" ? "bg-emerald-500" : "gradient-accent glow-accent"
+        }`}
+      >
+        {status !== "saved" && (
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+            <path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+          </svg>
+        )}
+        {status === "saving"
+          ? "Saving…"
+          : status === "saved"
+            ? "Scan saved ✓"
+            : status === "error"
+              ? "Couldn't save — try again"
+              : "Save this scan"}
+      </button>
+      {status === "saved" && savedScanId && (
+        <Link
+          href={`/scans/${savedScanId}`}
+          className="mt-2 block text-center text-xs text-accent underline"
+        >
+          View your scan
+        </Link>
       )}
-      {status === "saving"
-        ? "Saving…"
-        : status === "saved"
-          ? "Scan saved ✓"
-          : status === "error"
-            ? "Couldn't save — try again"
-            : "Save this scan"}
-    </button>
+    </>
   );
 }

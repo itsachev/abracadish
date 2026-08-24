@@ -2,7 +2,6 @@
 
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   clearAllItems,
   clearCheckedItems,
@@ -26,7 +25,6 @@ function groupByRecipe(items) {
 }
 
 export default function ShoppingListPage() {
-  const router = useRouter();
   const items = useSyncExternalStore(subscribeToShoppingListChanges, getShoppingListSnapshot, () => EMPTY);
   const hasChecked = items.some((item) => item.checked);
   const groups = groupByRecipe(items);
@@ -34,7 +32,7 @@ export default function ShoppingListPage() {
 
   function handleClearAll() {
     clearAllItems();
-    router.back();
+    setConfirmingClearAll(false);
   }
 
   return (

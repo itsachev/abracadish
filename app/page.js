@@ -65,7 +65,7 @@ export default function Home() {
           with confidence you can trust, not AI guesses dressed up as facts.
         </p>
 
-        {/* <Link
+        <Link
           href="/scan"
           className="gradient-accent glow-accent mt-9 flex items-center justify-center gap-2 rounded-2xl py-4 text-center text-base font-semibold text-white transition-transform active:scale-[0.98]"
         >
@@ -74,7 +74,7 @@ export default function Home() {
             <circle cx="12" cy="13" r="3.4" stroke="currentColor" strokeWidth="2" />
           </svg>
           Scan a dish
-        </Link> */}
+        </Link>
 
         {hasActivity ? (
           <section className="mt-14">
