@@ -1,12 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useAuthUser } from "@/lib/useAuthUser";
+import { getSavedIdsSnapshot, subscribeToSavedChanges } from "@/lib/savedRecipes";
+import { getCookedIdsSnapshot, subscribeToCookedChanges } from "@/lib/cookedRecipes";
+import { getScansForUser } from "@/lib/scans";
+
+const EMPTY = [];
+
+function CountBadge({ count }) {
+  if (count === null) return null;
+  return (
+    <span className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs font-semibold text-accent">
+      {count}
+    </span>
+  );
+}
 
 export default function AccountPage() {
   const user = useAuthUser();
   const [signingOut, setSigningOut] = useState(false);
+  const savedIds = useSyncExternalStore(subscribeToSavedChanges, getSavedIdsSnapshot, () => EMPTY);
+  const cookedIds = useSyncExternalStore(subscribeToCookedChanges, getCookedIdsSnapshot, () => EMPTY);
+  const [scanCount, setScanCount] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    getScansForUser(user.id)
+      .then((data) => {
+        if (!cancelled) setScanCount(data.length);
+      })
+      .catch(() => {
+        if (!cancelled) setScanCount(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  const savedTotal = scanCount === null ? null : savedIds.length + scanCount;
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -52,14 +86,20 @@ export default function AccountPage() {
           className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >
           Saved scans & recipes
-          <span className="text-muted">→</span>
+          <span className="flex items-center gap-2">
+            <CountBadge count={savedTotal} />
+            <span className="text-muted">→</span>
+          </span>
         </Link>
         <Link
           href="/cooked"
           className="flex items-center justify-between rounded-3xl border border-border bg-surface p-4 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-surface-hover"
         >
           Cooked recipes
-          <span className="text-muted">→</span>
+          <span className="flex items-center gap-2">
+            <CountBadge count={cookedIds.length} />
+            <span className="text-muted">→</span>
+          </span>
         </Link>
         <Link
           href="/progress"
