@@ -3,6 +3,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { readScanLocation, saveScanLocation } from "@/lib/scanLocation";
 import { hasDeclinedLocation, setLocationDeclined } from "@/lib/locationPreference";
+import { getRestaurantScanStats } from "@/lib/scans";
+
+const RESTAURANT_LOOKUP_DEBOUNCE_MS = 600;
 
 function subscribeNoop() {
   return () => {};
@@ -24,8 +27,40 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
   const declined = useSyncExternalStore(subscribeNoop, hasDeclinedLocation, getServerSnapshotFalse);
   const [addedLocation, setAddedLocation] = useState(null);
   const [requesting, setRequesting] = useState(false);
+  const [restaurantStats, setRestaurantStats] = useState(null);
 
   const location = storedLocation ?? addedLocation;
+
+  // Debounced lookup: "N people have scanned dishes here" social proof,
+  // keyed on the restaurant name specifically (not the coarser city-level
+  // location label — that would produce misleading matches across unrelated
+  // restaurants, which conflicts with the app's honesty-about-uncertainty
+  // principle). Only fires once someone's typed something that looks like a
+  // real name, not on every keystroke.
+  useEffect(() => {
+    const trimmed = restaurantName?.trim();
+    let cancelled = false;
+
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      if (!trimmed || trimmed.length < 3) {
+        setRestaurantStats(null);
+        return;
+      }
+      getRestaurantScanStats(trimmed)
+        .then((stats) => {
+          if (!cancelled) setRestaurantStats(stats);
+        })
+        .catch(() => {
+          if (!cancelled) setRestaurantStats(null);
+        });
+    }, RESTAURANT_LOOKUP_DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [restaurantName]);
 
   // Resolve a human-readable place name once we have coordinates. Guarded on
   // location.label so this only fires once per location: saving the label
@@ -91,6 +126,18 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
         placeholder="Restaurant name (optional)"
         className="mt-3 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent/50 focus:outline-none"
       />
+
+      {restaurantStats &&
+        (restaurantStats.totalCount > 0 ? (
+          <p className="mt-2 text-xs text-accent">
+            🍽️ {restaurantStats.totalCount} scan{restaurantStats.totalCount === 1 ? "" : "s"} logged
+            here
+            {restaurantStats.sampleDishes.length > 0 &&
+              ` — including ${restaurantStats.sampleDishes.slice(0, 2).join(", ")}`}
+          </p>
+        ) : (
+          <p className="mt-2 text-xs text-muted">You&apos;ll be the first to scan a dish here 🎉</p>
+        ))}
 
       {location ? (
         <p className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400">
