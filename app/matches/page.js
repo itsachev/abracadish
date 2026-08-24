@@ -112,7 +112,8 @@ export default function MatchesPage() {
       {candidates && (
         <section className="mt-6">
           <h2 className="text-sm font-semibold text-foreground">
-            We found {candidates.length} recipe{candidates.length === 1 ? "" : "s"} that look
+            We found <span className="font-mono font-bold text-accent">{candidates.length}</span>{" "}
+            recipe{candidates.length === 1 ? "" : "s"} that look
             {candidates.length === 1 ? "s" : ""} similar
           </h2>
           <div className="mt-3 space-y-3">

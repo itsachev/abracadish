@@ -195,7 +195,7 @@ export default function ResultsPage() {
 
             return (
               <section className="mt-6 rounded-3xl border border-border bg-surface p-4 backdrop-blur-sm">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
+                <h2 className="text-xs font-bold uppercase tracking-wide text-black">
                   Dish profile
                 </h2>
 
