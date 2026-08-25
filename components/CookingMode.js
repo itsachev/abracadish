@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { trackEvent } from "@/lib/trackEvent";
 import { markRecipeCooked } from "@/lib/cookedRecipes";
+import IngredientSubstituteSheet from "@/components/IngredientSubstituteSheet";
 
 function formatTime(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
@@ -16,6 +17,7 @@ export default function CookingMode({ recipe }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(null);
   const [timerStepIndex, setTimerStepIndex] = useState(stepIndex);
+  const [showIngredients, setShowIngredients] = useState(false);
 
   const step = recipe.steps[stepIndex];
   const isLastStep = stepIndex === recipe.steps.length - 1;
@@ -79,7 +81,26 @@ export default function CookingMode({ recipe }) {
         <span className="font-mono text-sm font-medium text-muted">
           Step {stepIndex + 1} of {recipe.steps.length}
         </span>
-        <div className="h-9 w-9" />
+        {recipe.ingredients?.length ? (
+          <button
+            type="button"
+            onClick={() => setShowIngredients(true)}
+            aria-label="View ingredients"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-muted"
+          >
+            <svg viewBox="0 0 24 24" fill="none" className="h-4.5 w-4.5">
+              <path
+                d="M6 3v6a3 3 0 0 0 3 3v9M9 3v6M12 3v6M17 3c-1.5 1.5-2 3-2 5s1 3 2 3v10"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        ) : (
+          <div className="h-9 w-9" />
+        )}
       </div>
 
       <div className="relative px-5 pt-4">
@@ -145,6 +166,10 @@ export default function CookingMode({ recipe }) {
           {isLastStep ? "Finish" : "Next"}
         </button>
       </div>
+
+      {showIngredients && (
+        <IngredientSubstituteSheet recipe={recipe} onClose={() => setShowIngredients(false)} />
+      )}
     </div>
   );
 }

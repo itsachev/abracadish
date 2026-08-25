@@ -17,7 +17,8 @@ create table if not exists funnel_events (
       'recipe_selected',
       'cooking_started',
       'cooking_completed',
-      'recipe_rated'
+      'recipe_rated',
+      'ingredient_substitute_used'
     )),
   dish_name text,
   recipe_id text,
@@ -25,9 +26,9 @@ create table if not exists funnel_events (
   created_at timestamptz not null default now()
 );
 
--- Re-run guard for deployments created before 'recipe_rated' existed: the
--- inline check above only applies on first create, so widen it explicitly
--- for tables that already exist.
+-- Re-run guard for deployments created before 'recipe_rated'/
+-- 'ingredient_substitute_used' existed: the inline check above only applies
+-- on first create, so widen it explicitly for tables that already exist.
 alter table funnel_events drop constraint if exists funnel_events_event_type_check;
 alter table funnel_events add constraint funnel_events_event_type_check
   check (event_type in (
@@ -37,7 +38,8 @@ alter table funnel_events add constraint funnel_events_event_type_check
     'recipe_selected',
     'cooking_started',
     'cooking_completed',
-    'recipe_rated'
+    'recipe_rated',
+    'ingredient_substitute_used'
   ));
 
 create index if not exists funnel_events_session_id_idx on funnel_events (session_id);
