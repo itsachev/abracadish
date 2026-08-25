@@ -52,7 +52,7 @@ export default function Home() {
       />
 
       <div className="relative mx-auto flex max-w-md flex-col px-6 pt-8">
-        <h1 className="font-display text-3xl font-bold tracking-tight flex">
+        <h1 className="font-display text-3xl font-bold tracking-tight flex flex-wrap sm:flex-nowrap">
           <span className="block">
             <span className="gradient-text">Snap.</span>Identify.
           </span>
