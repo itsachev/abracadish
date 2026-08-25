@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuthUser } from "@/lib/useAuthUser";
 import { getScansForUser } from "@/lib/scans";
 import { computeStreak, computeCuisineBadges, computeWeeklyRecap } from "@/lib/scanStats";
+import StreakReminderToggle from "@/components/StreakReminderToggle";
 
 export default function ProgressPage() {
   const user = useAuthUser();
@@ -86,6 +87,8 @@ export default function ProgressPage() {
           <p className="mt-1 text-xs text-muted">Scan a dish today to start a new streak.</p>
         )}
       </section>
+
+      <StreakReminderToggle />
 
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-3xl border border-border bg-surface p-4 text-center">
