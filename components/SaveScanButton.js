@@ -38,7 +38,15 @@ export default function SaveScanButton({ dish, answers, restaurantName, photo })
         possible_ingredients: dish.possibleIngredients,
         answers,
         restaurant_name: restaurantName || null,
-        location: location ? { lat: location.lat, lng: location.lng, source: location.source } : null,
+        location: location
+          ? {
+              lat: location.lat,
+              lng: location.lng,
+              source: location.source,
+              ...(location.placeId ? { placeId: location.placeId } : {}),
+              ...(location.address ? { address: location.address } : {}),
+            }
+          : null,
         location_label: location?.label ?? null,
         image_path: imagePath,
       })

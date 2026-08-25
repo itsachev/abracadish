@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { readScanLocation, saveScanLocation } from "@/lib/scanLocation";
 import { hasDeclinedLocation, setLocationDeclined } from "@/lib/locationPreference";
 import { getRestaurantScanStats } from "@/lib/scans";
+import RestaurantSearchInput from "@/components/RestaurantSearchInput";
+import LocationMapPicker from "@/components/LocationMapPicker";
 
 const RESTAURANT_LOOKUP_DEBOUNCE_MS = 600;
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const RESTAURANT_INPUT_CLASSNAME =
+  "mt-3 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent/50 focus:outline-none";
 
 function subscribeNoop() {
   return () => {};
@@ -20,6 +26,20 @@ function getServerSnapshotFalse() {
 }
 
 export default function LocationPrompt({ restaurantName, onRestaurantNameChange }) {
+  const content = (
+    <LocationPromptContent restaurantName={restaurantName} onRestaurantNameChange={onRestaurantNameChange} />
+  );
+
+  if (!GOOGLE_MAPS_API_KEY) return content;
+
+  return (
+    <APIProvider apiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+      {content}
+    </APIProvider>
+  );
+}
+
+function LocationPromptContent({ restaurantName, onRestaurantNameChange }) {
   // useSyncExternalStore, not useState(() => ...) — reading storage in a
   // lazy initializer would mismatch the server's null render (see the
   // /results hydration fix).
@@ -90,6 +110,20 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
     };
   }, [location]);
 
+  // A place picked from search is the most precise signal we can get, so it
+  // takes over the pin outright — including clearing any previous label, so
+  // the reverse-geocode effect re-resolves it for the new spot.
+  function handlePlaceSelect(place) {
+    const next = { lat: place.lat, lng: place.lng, source: "places", placeId: place.placeId };
+    saveScanLocation(next);
+    setAddedLocation(next);
+  }
+
+  function handleMapPositionChange(next) {
+    saveScanLocation(next);
+    setAddedLocation(next);
+  }
+
   function requestLocation() {
     if (!navigator.geolocation) return;
     setRequesting(true);
@@ -119,13 +153,24 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
       <h2 className="text-sm font-semibold text-foreground">Where did you have this?</h2>
       <p className="text-xs text-muted">Optional — helps with restaurant matching later.</p>
 
-      <input
-        type="text"
-        value={restaurantName}
-        onChange={(event) => onRestaurantNameChange(event.target.value)}
-        placeholder="Restaurant name (optional)"
-        className="mt-3 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent/50 focus:outline-none"
-      />
+      {GOOGLE_MAPS_API_KEY ? (
+        <div className="mt-3">
+          <RestaurantSearchInput
+            value={restaurantName}
+            onChange={onRestaurantNameChange}
+            onPlaceSelect={handlePlaceSelect}
+            className={RESTAURANT_INPUT_CLASSNAME}
+          />
+        </div>
+      ) : (
+        <input
+          type="text"
+          value={restaurantName}
+          onChange={(event) => onRestaurantNameChange(event.target.value)}
+          placeholder="Restaurant name (optional)"
+          className={RESTAURANT_INPUT_CLASSNAME}
+        />
+      )}
 
       {restaurantStats &&
         (restaurantStats.totalCount > 0 ? (
@@ -174,6 +219,13 @@ export default function LocationPrompt({ restaurantName, onRestaurantNameChange 
             {requesting ? "Getting location…" : "Add location"}
           </button>
         )
+      )}
+
+      {GOOGLE_MAPS_API_KEY && (location || !declined) && (
+        <LocationMapPicker
+          position={location ? { lat: location.lat, lng: location.lng } : null}
+          onPositionChange={handleMapPositionChange}
+        />
       )}
     </section>
   );
