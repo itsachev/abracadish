@@ -16,13 +16,29 @@ create table if not exists funnel_events (
       'matches_viewed',
       'recipe_selected',
       'cooking_started',
-      'cooking_completed'
+      'cooking_completed',
+      'recipe_rated'
     )),
   dish_name text,
   recipe_id text,
   metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
+
+-- Re-run guard for deployments created before 'recipe_rated' existed: the
+-- inline check above only applies on first create, so widen it explicitly
+-- for tables that already exist.
+alter table funnel_events drop constraint if exists funnel_events_event_type_check;
+alter table funnel_events add constraint funnel_events_event_type_check
+  check (event_type in (
+    'photo_captured',
+    'dish_recognized',
+    'matches_viewed',
+    'recipe_selected',
+    'cooking_started',
+    'cooking_completed',
+    'recipe_rated'
+  ));
 
 create index if not exists funnel_events_session_id_idx on funnel_events (session_id);
 create index if not exists funnel_events_event_type_idx on funnel_events (event_type);

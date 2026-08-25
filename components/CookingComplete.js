@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import SaveButton from "@/components/SaveButton";
+import { trackEvent } from "@/lib/trackEvent";
 
 // Fixed set of confetti pieces (left%, delay, duration, rotation, color) —
 // hardcoded rather than Math.random() so server and client markup match
@@ -26,6 +28,14 @@ const CONFETTI = [
 ];
 
 export default function CookingComplete({ recipe }) {
+  const [rating, setRating] = useState(null);
+
+  function handleRate(value) {
+    if (rating) return;
+    setRating(value);
+    trackEvent("recipe_rated", { recipeId: recipe.id, dishName: recipe.title, rating: value });
+  }
+
   return (
     <div className="relative flex h-dvh flex-col overflow-hidden bg-background">
       <div
@@ -82,7 +92,50 @@ export default function CookingComplete({ recipe }) {
         </p>
 
         <div
-          className="animate-rise-in mt-8 flex w-full max-w-xs flex-col gap-3"
+          className="animate-rise-in mt-6 flex h-9 items-center justify-center gap-3"
+          style={{ animationDelay: "0.12s" }}
+        >
+          {rating ? (
+            <p className="text-sm font-medium text-accent">Thanks for the feedback!</p>
+          ) : (
+            <>
+              <p className="text-sm text-muted">How was the recipe?</p>
+              <button
+                type="button"
+                onClick={() => handleRate("up")}
+                aria-label="Good recipe"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-emerald-400/50 hover:bg-emerald-400/10 hover:text-emerald-600"
+              >
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                  <path
+                    d="M7 11v9H4v-9h3Zm2.5 0 3.6-7.2a1.5 1.5 0 0 1 2.68 1.33L14.5 9H19a2 2 0 0 1 1.94 2.49l-1.5 6A2 2 0 0 1 17.5 19H9.5v-8Z"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRate("down")}
+                aria-label="Not a good recipe"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-red-400/50 hover:bg-red-400/10 hover:text-red-600"
+              >
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                  <path
+                    d="M17 13V4h3v9h-3Zm-2.5 0-3.6 7.2a1.5 1.5 0 0 1-2.68-1.33L9.5 15H5a2 2 0 0 1-1.94-2.49l1.5-6A2 2 0 0 1 6.5 5h8.5v8Z"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+
+        <div
+          className="animate-rise-in mt-6 flex w-full max-w-xs flex-col gap-3"
           style={{ animationDelay: "0.16s" }}
         >
           <Link
